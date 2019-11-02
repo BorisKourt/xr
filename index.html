@@ -5,10 +5,10 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
+    <script src="build/webxr-polyfill.js" type="text/javascript" charset="utf-8"></script>
     <script src="build/three.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="jsm/utils/BufferGeometryUtils.js" type="text/javascript" charset="utf-8"></script>
     <script src="jsm/vr/WebVR.js" type="text/javascript" charset="utf-8"></script>
-    <script src="build/webxr-polyfill.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 
@@ -97,8 +97,8 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
-				var sceneA = new FXScene( "cube", 5000, 1200, 120, new THREE.Vector3( 0, - 0.4, 0 ), 0xffffff );
-				var sceneB = new FXScene( "sphere", 500, 2000, 50, new THREE.Vector3( 0, 0.2, 0.1 ), 0x000000 );
+				var sceneA = new FXScene( "cube", 100, 1200, 120, new THREE.Vector3( 0, - 0.4, 0 ), 0xffffff );
+				var sceneB = new FXScene( "sphere", 100, 2000, 50, new THREE.Vector3( 0, 0.2, 0.1 ), 0x000000 );
 
 				transition = new Transition( sceneA, sceneB );
 
@@ -206,7 +206,7 @@
 				// Setup scene
 				this.scene = new THREE.Scene();
 				this.scene.add( new THREE.AmbientLight( 0x555555 ) );
-        this.background = background;
+        this.scene.background = background;
 
 				var light = new THREE.SpotLight( 0xffffff, 1.5 );
 				light.position.set( 0, 500, 2000 );
@@ -227,7 +227,7 @@
 					this.mesh.rotation.y += delta * this.rotationSpeed.y;
 					this.mesh.rotation.z += delta * this.rotationSpeed.z;
 
-					renderer.setClearColor( this.clearColor );
+					//renderer.setClearColor( this.clearColor );
 
 					if ( rtt ) {
 
