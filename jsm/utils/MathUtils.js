@@ -3,9 +3,7 @@
  * @author thezwap / http://github.com/thezwap
  */
 
-
-
-var MathUtils = {
+THREE.MathUtils = {
 
 	setQuaternionFromProperEuler: function ( q, a, b, c, order ) {
 
@@ -63,5 +61,3 @@ var MathUtils = {
 	}
 
 };
-
-export { MathUtils };

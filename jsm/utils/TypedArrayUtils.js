@@ -1,5 +1,5 @@
 
-var TypedArrayUtils = {};
+THREE.TypedArrayUtils = {};
 
 /**
  * In-place quicksort for typed arrays (e.g. for Float32Array)
@@ -18,7 +18,7 @@ var TypedArrayUtils = {};
  * orderElement: 0 //order according to x
  */
 
-TypedArrayUtils.quicksortIP = function ( arr, eleSize, orderElement ) {
+THREE.TypedArrayUtils.quicksortIP = function ( arr, eleSize, orderElement ) {
 
 	var stack = [];
 	var sp = - 1;
@@ -179,10 +179,10 @@ TypedArrayUtils.quicksortIP = function ( arr, eleSize, orderElement ) {
  * http://en.wikipedia.org/wiki/Binary_tree
  * http://en.wikipedia.org/wiki/K-d_tree
  *
- * If you want to further minimize memory usage, remove Node.depth and replace in search algorithm with a traversal to root node (see comments at TypedArrayUtils.Kdtree.prototype.Node)
+ * If you want to further minimize memory usage, remove Node.depth and replace in search algorithm with a traversal to root node (see comments at THREE.TypedArrayUtils.Kdtree.prototype.Node)
  */
 
-TypedArrayUtils.Kdtree = function ( points, metric, eleSize ) {
+THREE.TypedArrayUtils.Kdtree = function ( points, metric, eleSize ) {
 
 	var self = this;
 
@@ -210,7 +210,7 @@ TypedArrayUtils.Kdtree = function ( points, metric, eleSize ) {
 
 		}
 
-		TypedArrayUtils.quicksortIP( points, eleSize, dim );
+		THREE.TypedArrayUtils.quicksortIP( points, eleSize, dim );
 
 		median = Math.floor( plength / 2 );
 
@@ -242,7 +242,7 @@ TypedArrayUtils.Kdtree = function ( points, metric, eleSize ) {
 			result,
 			bestNodes;
 
-		bestNodes = new TypedArrayUtils.Kdtree.BinaryHeap(
+		bestNodes = new THREE.TypedArrayUtils.Kdtree.BinaryHeap(
 
 			function ( e ) {
 
@@ -405,7 +405,7 @@ TypedArrayUtils.Kdtree = function ( points, metric, eleSize ) {
  *
  * I experienced that for 200'000 nodes you can get rid of 4 MB memory each, leading to 8 MB memory saved.
  */
-TypedArrayUtils.Kdtree.prototype.Node = function ( obj, depth, parent, pos ) {
+THREE.TypedArrayUtils.Kdtree.prototype.Node = function ( obj, depth, parent, pos ) {
 
 	this.obj = obj;
 	this.left = null;
@@ -421,14 +421,14 @@ TypedArrayUtils.Kdtree.prototype.Node = function ( obj, depth, parent, pos ) {
  * @author http://eloquentjavascript.net/appendix2.htm
  */
 
-TypedArrayUtils.Kdtree.BinaryHeap = function ( scoreFunction ) {
+THREE.TypedArrayUtils.Kdtree.BinaryHeap = function ( scoreFunction ) {
 
 	this.content = [];
 	this.scoreFunction = scoreFunction;
 
 };
 
-TypedArrayUtils.Kdtree.BinaryHeap.prototype = {
+THREE.TypedArrayUtils.Kdtree.BinaryHeap.prototype = {
 
 	push: function ( element ) {
 
@@ -600,5 +600,3 @@ TypedArrayUtils.Kdtree.BinaryHeap.prototype = {
 	}
 
 };
-
-export { TypedArrayUtils };

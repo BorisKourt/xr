@@ -2,30 +2,16 @@
  * @author mrdoob / http://mrdoob.com
  */
 
-import {
-	CanvasTexture,
-	CircleBufferGeometry,
-	Color,
-	DoubleSide,
-	Group,
-	IcosahedronBufferGeometry,
-	Mesh,
-	MeshBasicMaterial,
-	Shape,
-	ShapeBufferGeometry
-} from "../../../build/three.module.js";
-import { ViveController } from "../vr/ViveController.js";
+THREE.PaintViveController = function ( id ) {
 
-var PaintViveController = function ( id ) {
-
-	ViveController.call( this, id );
+	THREE.ViveController.call( this, id );
 
 	var PI2 = Math.PI * 2;
 
 	var MODES = { COLOR: 0, SIZE: 1 };
 	var mode = MODES.COLOR;
 
-	var color = new Color( 1, 1, 1 );
+	var color = new THREE.Color( 1, 1, 1 );
 	var size = 1.0;
 
 	//
@@ -39,7 +25,7 @@ var PaintViveController = function ( id ) {
 		var context = canvas.getContext( '2d' );
 		var imageData = context.getImageData( 0, 0, 256, 256 );
 		var data = imageData.data;
-		var swatchColor = new Color();
+		var swatchColor = new THREE.Color();
 
 		for ( var i = 0, j = 0; i < data.length; i += 4, j ++ ) {
 
@@ -57,50 +43,50 @@ var PaintViveController = function ( id ) {
 
 		context.putImageData( imageData, 0, 0 );
 
-		return new CanvasTexture( canvas );
+		return new THREE.CanvasTexture( canvas );
 
 	}
 
 	// COLOR UI
 
-	var geometry = new CircleBufferGeometry( 1, 32 );
-	var material = new MeshBasicMaterial( { map: generateHueTexture() } );
-	var colorUI = new Mesh( geometry, material );
+	var geometry = new THREE.CircleBufferGeometry( 1, 32 );
+	var material = new THREE.MeshBasicMaterial( { map: generateHueTexture() } );
+	var colorUI = new THREE.Mesh( geometry, material );
 	colorUI.position.set( 0, 0.005, 0.0495 );
 	colorUI.rotation.x = - 1.45;
 	colorUI.scale.setScalar( 0.02 );
 	this.add( colorUI );
 
-	var geometry = new IcosahedronBufferGeometry( 0.1, 2 );
-	var material = new MeshBasicMaterial();
+	var geometry = new THREE.IcosahedronBufferGeometry( 0.1, 2 );
+	var material = new THREE.MeshBasicMaterial();
 	material.color = color;
-	var ball = new Mesh( geometry, material );
+	var ball = new THREE.Mesh( geometry, material );
 	colorUI.add( ball );
 
 
 	// SIZE UI
-	var sizeUI = new Group();
+	var sizeUI = new THREE.Group();
 	sizeUI.position.set( 0, 0.005, 0.0495 );
 	sizeUI.rotation.x = - 1.45;
 	sizeUI.scale.setScalar( 0.02 );
 	this.add( sizeUI );
 
-	var triangleShape = new Shape();
+	var triangleShape = new THREE.Shape();
 	triangleShape.moveTo( 0, - 1 );
 	triangleShape.lineTo( 1, 1 );
 	triangleShape.lineTo( - 1, 1 );
 
-	var geometry = new ShapeBufferGeometry( triangleShape );
-	var material = new MeshBasicMaterial( { color: 0x222222, wireframe: true } );
-	var sizeUIOutline = new Mesh( geometry, material );
+	var geometry = new THREE.ShapeBufferGeometry( triangleShape );
+	var material = new THREE.MeshBasicMaterial( { color: 0x222222, wireframe: true } );
+	var sizeUIOutline = new THREE.Mesh( geometry, material );
 	sizeUIOutline.position.z = 0.001;
 	resizeTriangleGeometry( sizeUIOutline.geometry, 1.0 );
 	sizeUI.add( sizeUIOutline );
 
-	var geometry = new ShapeBufferGeometry( triangleShape );
-	var material = new MeshBasicMaterial( { side: DoubleSide } );
+	var geometry = new THREE.ShapeBufferGeometry( triangleShape );
+	var material = new THREE.MeshBasicMaterial( { side: THREE.DoubleSide } );
 	material.color = color;
-	var sizeUIFill = new Mesh( geometry, material );
+	var sizeUIFill = new THREE.Mesh( geometry, material );
 	sizeUIFill.position.z = 0.0011;
 	resizeTriangleGeometry( sizeUIFill.geometry, 0.5 );
 	sizeUI.add( sizeUIFill );
@@ -194,7 +180,5 @@ var PaintViveController = function ( id ) {
 
 };
 
-PaintViveController.prototype = Object.create( ViveController.prototype );
-PaintViveController.prototype.constructor = PaintViveController;
-
-export { PaintViveController };
+THREE.PaintViveController.prototype = Object.create( THREE.ViveController.prototype );
+THREE.PaintViveController.prototype.constructor = THREE.PaintViveController;

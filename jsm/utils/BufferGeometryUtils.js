@@ -2,16 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-import {
-	BufferAttribute,
-	BufferGeometry,
-	InterleavedBuffer,
-	InterleavedBufferAttribute,
-	Vector2,
-	Vector3
-} from "../../../build/three.module.js";
-
-var BufferGeometryUtils = {
+THREE.BufferGeometryUtils = {
 
 	computeTangents: function ( geometry ) {
 
@@ -40,7 +31,7 @@ var BufferGeometryUtils = {
 
 		if ( attributes.tangent === undefined ) {
 
-			geometry.setAttribute( 'tangent', new BufferAttribute( new Float32Array( 4 * nVertices ), 4 ) );
+			geometry.setAttribute( 'tangent', new THREE.BufferAttribute( new Float32Array( 4 * nVertices ), 4 ) );
 
 		}
 
@@ -50,21 +41,21 @@ var BufferGeometryUtils = {
 
 		for ( var i = 0; i < nVertices; i ++ ) {
 
-			tan1[ i ] = new Vector3();
-			tan2[ i ] = new Vector3();
+			tan1[ i ] = new THREE.Vector3();
+			tan2[ i ] = new THREE.Vector3();
 
 		}
 
-		var vA = new Vector3(),
-			vB = new Vector3(),
-			vC = new Vector3(),
+		var vA = new THREE.Vector3(),
+			vB = new THREE.Vector3(),
+			vC = new THREE.Vector3(),
 
-			uvA = new Vector2(),
-			uvB = new Vector2(),
-			uvC = new Vector2(),
+			uvA = new THREE.Vector2(),
+			uvB = new THREE.Vector2(),
+			uvC = new THREE.Vector2(),
 
-			sdir = new Vector3(),
-			tdir = new Vector3();
+			sdir = new THREE.Vector3(),
+			tdir = new THREE.Vector3();
 
 		function handleTriangle( a, b, c ) {
 
@@ -145,8 +136,8 @@ var BufferGeometryUtils = {
 
 		}
 
-		var tmp = new Vector3(), tmp2 = new Vector3();
-		var n = new Vector3(), n2 = new Vector3();
+		var tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
+		var n = new THREE.Vector3(), n2 = new THREE.Vector3();
 		var w, t, test;
 
 		function handleVertex( v ) {
@@ -194,9 +185,9 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param  {Array<BufferGeometry>} geometries
+	 * @param  {Array<THREE.BufferGeometry>} geometries
 	 * @param  {Boolean} useGroups
-	 * @return {BufferGeometry}
+	 * @return {THREE.BufferGeometry}
 	 */
 	mergeBufferGeometries: function ( geometries, useGroups ) {
 
@@ -208,7 +199,7 @@ var BufferGeometryUtils = {
 		var attributes = {};
 		var morphAttributes = {};
 
-		var mergedGeometry = new BufferGeometry();
+		var mergedGeometry = new THREE.BufferGeometry();
 
 		var offset = 0;
 
@@ -348,8 +339,8 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param {Array<BufferAttribute>} attributes
-	 * @return {BufferAttribute}
+	 * @param {Array<THREE.BufferAttribute>} attributes
+	 * @return {THREE.BufferAttribute}
 	 */
 	mergeBufferAttributes: function ( attributes ) {
 
@@ -388,13 +379,13 @@ var BufferGeometryUtils = {
 
 		}
 
-		return new BufferAttribute( array, itemSize, normalized );
+		return new THREE.BufferAttribute( array, itemSize, normalized );
 
 	},
 
 	/**
-	 * @param {Array<BufferAttribute>} attributes
-	 * @return {Array<InterleavedBufferAttribute>}
+	 * @param {Array<THREE.BufferAttribute>} attributes
+	 * @return {Array<THREE.InterleavedBufferAttribute>}
 	 */
 	interleaveAttributes: function ( attributes ) {
 
@@ -423,7 +414,7 @@ var BufferGeometryUtils = {
 		}
 
 		// Create the set of buffer attributes
-		var interleavedBuffer = new InterleavedBuffer( new TypedArray( arrayLength ), stride );
+		var interleavedBuffer = new THREE.InterleavedBuffer( new TypedArray( arrayLength ), stride );
 		var offset = 0;
 		var res = [];
 		var getters = [ 'getX', 'getY', 'getZ', 'getW' ];
@@ -434,7 +425,7 @@ var BufferGeometryUtils = {
 			var attribute = attributes[ j ];
 			var itemSize = attribute.itemSize;
 			var count = attribute.count;
-			var iba = new InterleavedBufferAttribute( interleavedBuffer, itemSize, offset, attribute.normalized );
+			var iba = new THREE.InterleavedBufferAttribute( interleavedBuffer, itemSize, offset, attribute.normalized );
 			res.push( iba );
 
 			offset += itemSize;
@@ -458,7 +449,7 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param {Array<BufferGeometry>} geometry
+	 * @param {Array<THREE.BufferGeometry>} geometry
 	 * @return {number}
 	 */
 	estimateBytesUsed: function ( geometry ) {
@@ -481,9 +472,9 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param {BufferGeometry} geometry
+	 * @param {THREE.BufferGeometry} geometry
 	 * @param {number} tolerance
-	 * @return {BufferGeometry>}
+	 * @return {THREE.BufferGeometry>}
 	 */
 	mergeVertices: function ( geometry, tolerance = 1e-4 ) {
 
@@ -600,7 +591,7 @@ var BufferGeometryUtils = {
 			var oldAttribute = geometry.getAttribute( name );
 
 			var buffer = new oldAttribute.array.constructor( attrArrays[ name ] );
-			var attribute = new BufferAttribute( buffer, oldAttribute.itemSize, oldAttribute.normalized );
+			var attribute = new THREE.BufferAttribute( buffer, oldAttribute.itemSize, oldAttribute.normalized );
 
 			result.setAttribute( name, attribute );
 
@@ -612,7 +603,7 @@ var BufferGeometryUtils = {
 					var oldMorphAttribute = geometry.morphAttributes[ name ][ j ];
 
 					var buffer = new oldMorphAttribute.array.constructor( morphAttrsArrays[ name ][ j ] );
-					var morphAttribute = new BufferAttribute( buffer, oldMorphAttribute.itemSize, oldMorphAttribute.normalized );
+					var morphAttribute = new THREE.BufferAttribute( buffer, oldMorphAttribute.itemSize, oldMorphAttribute.normalized );
 					result.morphAttributes[ name ][ j ] = morphAttribute;
 
 				}
@@ -630,5 +621,3 @@ var BufferGeometryUtils = {
 	}
 
 };
-
-export { BufferGeometryUtils };

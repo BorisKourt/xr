@@ -2,20 +2,15 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
-import {
-	Group,
-	Mesh
-} from "../../../build/three.module.js";
-
-var SceneUtils = {
+THREE.SceneUtils = {
 
 	createMultiMaterialObject: function ( geometry, materials ) {
 
-		var group = new Group();
+		var group = new THREE.Group();
 
 		for ( var i = 0, l = materials.length; i < l; i ++ ) {
 
-			group.add( new Mesh( geometry, materials[ i ] ) );
+			group.add( new THREE.Mesh( geometry, materials[ i ] ) );
 
 		}
 
@@ -40,5 +35,3 @@ var SceneUtils = {
 	}
 
 };
-
-export { SceneUtils };

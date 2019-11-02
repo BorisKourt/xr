@@ -3,12 +3,7 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
-import {
-	Mesh,
-	Vector3
-} from "../../../build/three.module.js";
-
-var GeometryUtils = {
+THREE.GeometryUtils = {
 
 	// Merge two geometries or geometry and geometry from object (using object's transform)
 
@@ -18,7 +13,7 @@ var GeometryUtils = {
 
 		var matrix;
 
-		if ( geometry2 instanceof Mesh ) {
+		if ( geometry2 instanceof THREE.Mesh ) {
 
 			geometry2.matrixAutoUpdate && geometry2.updateMatrix();
 
@@ -37,11 +32,11 @@ var GeometryUtils = {
 
 	randomPointInTriangle: function () {
 
-		var vector = new Vector3();
+		var vector = new THREE.Vector3();
 
 		return function ( vectorA, vectorB, vectorC ) {
 
-			var point = new Vector3();
+			var point = new THREE.Vector3();
 
 			var a = Math.random();
 			var b = Math.random();
@@ -85,7 +80,7 @@ var GeometryUtils = {
 		vB = geometry.vertices[ face.b ];
 		vC = geometry.vertices[ face.c ];
 
-		return GeometryUtils.randomPointInTriangle( vA, vB, vC );
+		return THREE.GeometryUtils.randomPointInTriangle( vA, vB, vC );
 
 	},
 
@@ -115,7 +110,7 @@ var GeometryUtils = {
 			vB = vertices[ face.b ];
 			vC = vertices[ face.c ];
 
-			face._area = GeometryUtils.triangleArea( vA, vB, vC );
+			face._area = THREE.GeometryUtils.triangleArea( vA, vB, vC );
 
 			totalArea += face._area;
 
@@ -171,7 +166,7 @@ var GeometryUtils = {
 
 			index = binarySearchIndices( r );
 
-			result[ i ] = GeometryUtils.randomPointInFace( faces[ index ], geometry );
+			result[ i ] = THREE.GeometryUtils.randomPointInFace( faces[ index ], geometry );
 
 			if ( ! stats[ index ] ) {
 
@@ -198,9 +193,9 @@ var GeometryUtils = {
 			vA, vB, vC;
 
 		// precompute face areas
-		vA = new Vector3();
-		vB = new Vector3();
-		vC = new Vector3();
+		vA = new THREE.Vector3();
+		vB = new THREE.Vector3();
+		vC = new THREE.Vector3();
 
 		// geometry._areas = [];
 		var il = vertices.length / 9;
@@ -211,7 +206,7 @@ var GeometryUtils = {
 			vB.set( vertices[ i * 9 + 3 ], vertices[ i * 9 + 4 ], vertices[ i * 9 + 5 ] );
 			vC.set( vertices[ i * 9 + 6 ], vertices[ i * 9 + 7 ], vertices[ i * 9 + 8 ] );
 
-			totalArea += GeometryUtils.triangleArea( vA, vB, vC );
+			totalArea += THREE.GeometryUtils.triangleArea( vA, vB, vC );
 
 			cumulativeAreas.push( totalArea );
 
@@ -263,11 +258,11 @@ var GeometryUtils = {
 
 			index = binarySearchIndices( r );
 
-			// result[ i ] = GeometryUtils.randomPointInFace( faces[ index ], geometry, true );
+			// result[ i ] = THREE.GeometryUtils.randomPointInFace( faces[ index ], geometry, true );
 			vA.set( vertices[ index * 9 + 0 ], vertices[ index * 9 + 1 ], vertices[ index * 9 + 2 ] );
 			vB.set( vertices[ index * 9 + 3 ], vertices[ index * 9 + 4 ], vertices[ index * 9 + 5 ] );
 			vC.set( vertices[ index * 9 + 6 ], vertices[ index * 9 + 7 ], vertices[ index * 9 + 8 ] );
-			result[ i ] = GeometryUtils.randomPointInTriangle( vA, vB, vC );
+			result[ i ] = THREE.GeometryUtils.randomPointInTriangle( vA, vB, vC );
 
 		}
 
@@ -280,8 +275,8 @@ var GeometryUtils = {
 
 	triangleArea: function () {
 
-		var vector1 = new Vector3();
-		var vector2 = new Vector3();
+		var vector1 = new THREE.Vector3();
+		var vector2 = new THREE.Vector3();
 
 		return function ( vectorA, vectorB, vectorC ) {
 
@@ -322,7 +317,7 @@ var GeometryUtils = {
 	hilbert2D: function ( center, size, iterations, v0, v1, v2, v3 ) {
 
 		// Default Vars
-		var center = center !== undefined ? center : new Vector3( 0, 0, 0 ),
+		var center = center !== undefined ? center : new THREE.Vector3( 0, 0, 0 ),
 			size = size !== undefined ? size : 10,
 			half = size / 2,
 			iterations = iterations !== undefined ? iterations : 1,
@@ -333,10 +328,10 @@ var GeometryUtils = {
 		;
 
 		var vec_s = [
-			new Vector3( center.x - half, center.y, center.z - half ),
-			new Vector3( center.x - half, center.y, center.z + half ),
-			new Vector3( center.x + half, center.y, center.z + half ),
-			new Vector3( center.x + half, center.y, center.z - half )
+			new THREE.Vector3( center.x - half, center.y, center.z - half ),
+			new THREE.Vector3( center.x - half, center.y, center.z + half ),
+			new THREE.Vector3( center.x + half, center.y, center.z + half ),
+			new THREE.Vector3( center.x + half, center.y, center.z - half )
 		];
 
 		var vec = [
@@ -351,10 +346,10 @@ var GeometryUtils = {
 
 			var tmp = [];
 
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 0 ], half, iterations, v0, v3, v2, v1 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 1 ], half, iterations, v0, v1, v2, v3 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 2 ], half, iterations, v0, v1, v2, v3 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 3 ], half, iterations, v2, v1, v0, v3 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 0 ], half, iterations, v0, v3, v2, v1 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 1 ], half, iterations, v0, v1, v2, v3 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 2 ], half, iterations, v0, v1, v2, v3 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 3 ], half, iterations, v2, v1, v0, v3 ) );
 
 			// Return recursive call
 			return tmp;
@@ -390,7 +385,7 @@ var GeometryUtils = {
 	hilbert3D: function ( center, size, iterations, v0, v1, v2, v3, v4, v5, v6, v7 ) {
 
 		// Default Vars
-		var center = center !== undefined ? center : new Vector3( 0, 0, 0 ),
+		var center = center !== undefined ? center : new THREE.Vector3( 0, 0, 0 ),
 			size = size !== undefined ? size : 10,
 			half = size / 2,
 			iterations = iterations !== undefined ? iterations : 1,
@@ -405,14 +400,14 @@ var GeometryUtils = {
 		;
 
 		var vec_s = [
-			new Vector3( center.x - half, center.y + half, center.z - half ),
-			new Vector3( center.x - half, center.y + half, center.z + half ),
-			new Vector3( center.x - half, center.y - half, center.z + half ),
-			new Vector3( center.x - half, center.y - half, center.z - half ),
-			new Vector3( center.x + half, center.y - half, center.z - half ),
-			new Vector3( center.x + half, center.y - half, center.z + half ),
-			new Vector3( center.x + half, center.y + half, center.z + half ),
-			new Vector3( center.x + half, center.y + half, center.z - half )
+			new THREE.Vector3( center.x - half, center.y + half, center.z - half ),
+			new THREE.Vector3( center.x - half, center.y + half, center.z + half ),
+			new THREE.Vector3( center.x - half, center.y - half, center.z + half ),
+			new THREE.Vector3( center.x - half, center.y - half, center.z - half ),
+			new THREE.Vector3( center.x + half, center.y - half, center.z - half ),
+			new THREE.Vector3( center.x + half, center.y - half, center.z + half ),
+			new THREE.Vector3( center.x + half, center.y + half, center.z + half ),
+			new THREE.Vector3( center.x + half, center.y + half, center.z - half )
 		];
 
 		var vec = [
@@ -431,14 +426,14 @@ var GeometryUtils = {
 
 			var tmp = [];
 
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 0 ], half, iterations, v0, v3, v4, v7, v6, v5, v2, v1 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 1 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 2 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 3 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 4 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 5 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 6 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
-			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 7 ], half, iterations, v6, v5, v2, v1, v0, v3, v4, v7 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 0 ], half, iterations, v0, v3, v4, v7, v6, v5, v2, v1 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 1 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 2 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 3 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 4 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 5 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 6 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
+			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 7 ], half, iterations, v6, v5, v2, v1, v0, v3, v4, v7 ) );
 
 			// Return recursive call
 			return tmp;
@@ -451,5 +446,3 @@ var GeometryUtils = {
 	}
 
 };
-
-export { GeometryUtils };
