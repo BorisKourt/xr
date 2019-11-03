@@ -197,7 +197,7 @@ function init() {
 
     var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
     var material_group = new THREE.MeshStandardMaterial(
-      { roughness: 0.9,
+      { roughness: 0.0,
         metalness: 0.9,
         //envMap: textureEquirec
         envMap: equirectMaterial.map
