@@ -4,7 +4,7 @@ var canvas2, ctx;
 var controller1, controller2;
 var raycaster, intersected = [];
 var tempMatrix = new THREE.Matrix4();
-var group;
+var group, slides;
 var cubeCamera, cubeCameraB;
 var material;
 var count = 0;
@@ -76,8 +76,8 @@ function init() {
   textureEquirec = new THREE.CanvasTexture(canvas2);
 
   textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
-  textureEquirec.magFilter = THREE.LinearFilter;
-  //textureEquirec.minFilter = THREE.NearestFilter;
+  //textureEquirec.magFilter = THREE.LinearFilter;
+  textureEquirec.minFilter = THREE.NearestFilter;
   textureEquirec.needsUpdate = true;
 
   /*
@@ -115,7 +115,7 @@ function init() {
   cubeMesh.visible = true;
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.05, 200 );
+  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 200 );
 
   scene.add(cubeMesh);
 
@@ -128,13 +128,13 @@ function init() {
   ];
 
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
-  const dragger_geo = new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.005, 32 );
+  const dragger_geo = new THREE.BoxBufferGeometry( 0.25, 0.25, 0.002 );
 
   for ( var i = 0; i < slideImages.length; i ++ ) {
 
     const material_dragger = new THREE.MeshStandardMaterial(
-      { roughness: 0.01,
-        metalness: 0.9,
+      { roughness: 0.9,
+        metalness: 0.5,
         envMap: textureEquirec
         //envMap: equirectMaterial.map
       } );
@@ -151,17 +151,20 @@ function init() {
         side: THREE.DoubleSide,
         transparent: true}));
 
+    obj.position.x =1.9;
+    obj.position.y = 0.9;
+
     dragger.add(obj);
 
-    dragger.position.x = 0;
-    dragger.position.y = 1;
-    dragger.position.z = -1 + (0.1 * i);
+    dragger.position.x = -2;
+    dragger.position.y = -1;
+    dragger.position.z = -4 + (0.1 * i);
 
     /*
     dragger.rotation.x = Math.random() * 2 * Math.PI;
     dragger.rotation.y = Math.random() * 2 * Math.PI;
-    dragger.rotation.z = Math.random() * 2 * Math.PI;
     */
+
 
     slides.add(dragger);
 
@@ -171,8 +174,8 @@ function init() {
   scene.add( group );
 
   var geometries = [
-    new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.005, 32 ),
-    new THREE.IcosahedronBufferGeometry( 0.2, 3 )
+    new THREE.CylinderBufferGeometry( 0.4, 0.4, 0.005, 32 ),
+    new THREE.IcosahedronBufferGeometry( 0.4, 3 )
   ];
 
   for ( var i = 0; i < 32; i ++ ) {
@@ -187,9 +190,15 @@ function init() {
 
     var object = new THREE.Mesh( geometry, material_group );
 
-    object.position.x = Math.random() * 6 - 3;
-    object.position.y = Math.random() * 2;
-    object.position.z = Math.random() * 6 - 3;
+    if (i % 2 == 0) {
+      object.position.x = Math.random() * 6 - 3;
+      object.position.y = Math.random() * 2;
+      object.position.z = Math.random() * -3 - 0.5;
+    } else {
+      object.position.x = Math.random() * 6 - 3;
+      object.position.y = Math.random() * 2;
+      object.position.z = Math.random() * 3 + 0.5;
+    }
 
     object.rotation.x = Math.random() * 2 * Math.PI;
     object.rotation.y = Math.random() * 2 * Math.PI;
@@ -281,7 +290,7 @@ function getIntersections( controller ) {
   raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
   raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
 
-  return raycaster.intersectObjects( group.children );
+  return raycaster.intersectObjects( group.slides);
 
 }
 
