@@ -86,8 +86,6 @@
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.shadowMap.enabled = true;
-        renderer.gammaInput = true;
-        renderer.gammaOutput = true;
 				renderer.vr.enabled = true;
         container.appendChild( renderer.domElement );
 
@@ -126,9 +124,13 @@
         var mesh = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), material2);
         scene.add(mesh);
 
+				material = new THREE.MeshStandardMaterial(
+        { roughness: 0.05,
+          metalness: 0.9,
+          envMap: cubeCamera.renderTarget.texture } );
+
 
 				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
-				material = new THREE.MeshStandardMaterial( { roughness: 0.05, metalness: 0.9, envMap: cubeCamera.renderTarget.texture} );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -358,19 +360,23 @@
 				mesh.rotation.x = time * 2;
 				mesh.rotation.y = time * 5;
 
+
+        mesh.visible = false;
       
         if ( count % 2 === 0 ) {
-
-					material.envMap = cubeCamera.renderTarget.texture;
-					cubeCameraB.update( renderer, scene );
-
-				} else {
 
 					material.envMap = cubeCameraB.renderTarget.texture;
 					cubeCamera.update( renderer, scene );
 
+				} else {
+
+					material.envMap = cubeCamera.renderTarget.texture;
+					cubeCameraB.update( renderer, scene );
+
 				}
         count ++;
+
+        mesh.visible = true;
 
 				renderer.render( scene, camera );
 
