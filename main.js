@@ -173,7 +173,6 @@ function init() {
 
   }
 
-
   var geometries = [
     new THREE.CylinderBufferGeometry( 0.4, 0.4, 0.005, 32 ),
     new THREE.IcosahedronBufferGeometry( 0.4, 3 )
@@ -192,13 +191,13 @@ function init() {
     var object = new THREE.Mesh( geometry, material_group );
 
     if (i % 2 == 0) {
-      object.position.x = Math.random() * 6 - 3;
+      object.position.x = Math.random() * 10 - 5;
       object.position.y = Math.random() * 2;
-      object.position.z = Math.random() * -3 - 0.5;
+      object.position.z = Math.random() * -5 - 0.5;
     } else {
-      object.position.x = Math.random() * 6 - 3;
+      object.position.x = Math.random() * 10 - 5;
       object.position.y = Math.random() * 2;
-      object.position.z = Math.random() * 3 + 0.5;
+      object.position.z = Math.random() * 5 + 0.5;
     }
 
     object.rotation.x = Math.random() * 2 * Math.PI;
