@@ -163,8 +163,6 @@ function init() {
     test_slide
   ];
 
-  slideImages.reverse();
-
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
   const dragger_geo = new THREE.BoxBufferGeometry( 0.1, 1.63, 0.003 );
 
@@ -200,7 +198,7 @@ function init() {
 
     dragger.position.x = -2;
     dragger.position.y = 1;
-    dragger.position.z = -2.5 + (0.075 * i);
+    dragger.position.z = -2.5 + -(0.075 * i);
 
     /*
     dragger.rotation.x = Math.random() * 2 * Math.PI;
