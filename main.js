@@ -274,7 +274,7 @@ function onSelectEnd( event ) {
     object.matrix.premultiply( controller.matrixWorld );
     object.matrix.decompose( object.position, object.quaternion, object.scale );
     object.material.emissive.b = 0;
-    group.add( object );
+    slides.add( object );
 
     controller.userData.selected = undefined;
 
@@ -290,7 +290,7 @@ function getIntersections( controller ) {
   raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
   raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
 
-  return raycaster.intersectObjects( group.slides);
+  return raycaster.intersectObjects( slides.children);
 
 }
 
