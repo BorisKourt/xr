@@ -172,8 +172,9 @@ function init() {
   for ( var i = 0; i < slideImages.length; i ++ ) {
 
     const material_dragger = new THREE.MeshStandardMaterial(
-      { roughness: 0.05,
+      { roughness: 0.0,
         metalness: 0.9,
+        color: 0xC96055,
         //envMap: textureEquirec
         envMap: equirectMaterial.map
       } );
@@ -183,7 +184,7 @@ function init() {
     const obj = new THREE.Mesh(
       plane_geo,
       new THREE.MeshBasicMaterial({
-        premultipliedAlpha: true,
+        //premultipliedAlpha: true,
         depthWrite: true,
         //alphaMap: alpha_node,
         color: 0xffffff,
@@ -198,7 +199,7 @@ function init() {
 
     dragger.position.x = -2;
     dragger.position.y = 1;
-    dragger.position.z = -2.5 + -(0.075 * i);
+    dragger.position.z = -3 + -(0.07 * i);
 
     /*
     dragger.rotation.x = Math.random() * 2 * Math.PI;
@@ -217,7 +218,8 @@ function init() {
 
   for ( var i = 0; i < 32; i ++ ) {
 
-    var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
+    var geo = Math.floor( Math.random() * geometries.length );
+    var geometry = geometries[ geo ];
     var material_group = new THREE.MeshStandardMaterial(
       { roughness: 0.0,
         metalness: 0.9,
@@ -229,11 +231,11 @@ function init() {
 
     if (i % 2 == 0) {
       object.position.x = Math.random() * 10 - 5;
-      object.position.y = Math.random() * -5;
+      object.position.y = Math.random() * 10 - 5;
       object.position.z = Math.random() * -5 - 0.5;
     } else {
       object.position.x = Math.random() * 10 - 5;
-      object.position.y = Math.random() * 5;
+      object.position.y = Math.random() * 10 - 5;
       object.position.z = Math.random() * 5 + 0.5;
     }
 
@@ -242,6 +244,7 @@ function init() {
     object.rotation.z = Math.random() * 2 * Math.PI;
 
     object.scale.setScalar( Math.random() + 0.5 );
+    object.userData.id = 100 + geo;
 
     group.add( object );
 
