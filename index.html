@@ -11,57 +11,9 @@
     <script src="jsm/vr/WebVR.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-
-    <script id="vs" type="x-shader/x-vertex">#version 300 es
-      out vec2 vUv;
-
-      void main() {
-
-        vUv = vec2( uv.x, uv.y );
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-
-      }
-    </script>
-
-    <script id="fs" type="x-shader/x-fragment">#version 300 es
-      uniform float mixRatio;
-
-      uniform sampler2D tDiffuse1;
-      uniform sampler2D tDiffuse2;
-      uniform sampler2D tMixTexture;
-
-      uniform int useTexture;
-      uniform float threshold;
-
-      in vec2 vUv;
-
-      out vec4 myOutputColor;
-
-      void main() {
-
-        vec4 texel1 = texture( tDiffuse1, vUv );
-        vec4 texel2 = texture( tDiffuse2, vUv );
-
-        if (useTexture==1) {
-
-          vec4 transitionTexel = texture( tMixTexture, vUv );
-          float r = mixRatio * (1.0 + threshold * 2.0) - threshold;
-          float mixf=clamp((transitionTexel.r - r)*(1.0/threshold), 0.0, 1.0);
-
-          myOutputColor = mix( texel1, texel2, mixf );
-
-        } else {
-
-          myOutputColor = mix( texel2, texel1, mixRatio );
-
-        }
-
-      }
-    </script>
-
     <script type="text/javascript">
 
-			var camera, scene, renderer, container;
+      var camera, scene, renderer, container, textureEquirec, equirectMaterial;
 
       var controller1, controller2;
 			var raycaster, intersected = [];
@@ -76,10 +28,39 @@
 
 			function init() {
 
+        var canvas2 = document.createElement('canvas');
+
+        if (canvas2.getContext) {
+          var ctx = canvas2.getContext('2d', { antialias: false, alpha: false });
+          canvas2.width = 4096;
+          canvas2.height = 2048;
+          canvas2.style.position = "absolute";
+
+          ctx.fillStyle = "rgba(200, 200, 0, 0.5)";
+          ctx.fillRect(0, 0, 4096, 2048);
+
+          //Loading of the home test image - img1
+          var img1 = new Image();
+
+          //drawing of the test image - img1
+          img1.onload = function () {
+            //draw background image
+            ctx.drawImage(img1, 0, 0);
+            //draw a box over the top
+            ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
+            ctx.fillRect(0, 0, 500, 500);
+
+          };
+
+          img1.src = 'images/frans_widerberg_1572276471.jpg';
+        }
+				document.body.appendChild( canvas2 );
+
         container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
         var canvas = document.createElement( 'canvas' );
+        canvas.style.position = "absolute";
 				var context = canvas.getContext( 'webgl2', { antialias: false, alpha: false } );
 				renderer = new THREE.WebGLRenderer( { canvas: canvas, context: context } );
 
@@ -89,37 +70,54 @@
 				renderer.vr.enabled = true;
         container.appendChild( renderer.domElement );
 
-				var background = new THREE.CubeTextureLoader()
-					.setPath( 'munch1/' )
-					.load( [ 'px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png' ] );
-				background.format = THREE.RGBFormat;
+        textureEquirec = new THREE.CanvasTexture(canvas2);
+        textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
+        textureEquirec.magFilter = THREE.LinearFilter;
+        textureEquirec.minFilter = THREE.NearestFilter;
+        textureEquirec.needsUpdate = true;
+
+        /*
+        var equirectShader = THREE.ShaderLib[ "equirect" ];
+
+        var equirectMaterial = new THREE.ShaderMaterial( {
+          fragmentShader: equirectShader.fragmentShader,
+          vertexShader: equirectShader.vertexShader,
+          uniforms: equirectShader.uniforms,
+          depthWrite: true,
+          side: THREE.BackSide
+        } );
+
+        equirectMaterial.uniforms[ "tEquirect" ].value = textureEquirec;
+
+        Object.defineProperty( equirectMaterial, 'map', {
+          get: function () {
+
+            return this.uniforms.tEquirect.value;
+
+          }
+        });
+        */
+        equirectMaterial = new THREE.MeshBasicMaterial( { map: textureEquirec } );
+
+        var geometry2 = new THREE.SphereBufferGeometry( 10, 60, 40 );
+				// invert the geometry on the x-axis so that all of the faces point inward
+				geometry2.scale( - 1, 1, 1 );
+
+        cubeMesh = new THREE.Mesh( geometry2, equirectMaterial );
+        cubeMesh.material = equirectMaterial;
+        cubeMesh.visible = true;
 
 				scene = new THREE.Scene();
+        scene.add(cubeMesh);
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 200 );
-
-        var shader = THREE.ShaderLib.cube;
-        shader.uniforms.tCube.value = background;
-
-        var material2 = new THREE.ShaderMaterial({
-
-          fragmentShader: shader.fragmentShader,
-          vertexShader: shader.vertexShader,
-          uniforms: shader.uniforms,
-          depthWrite: false,
-          side: THREE.BackSide
-
-        });
-
-        var mesh = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), material2);
-        scene.add(mesh);
-
 
 				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
 				var material = new THREE.MeshStandardMaterial(
         { roughness: 0.05,
           metalness: 0.9,
-          envMap: background} );
+          envMap: textureEquirec
+          } );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -131,7 +129,8 @@
 				var material = new THREE.MeshStandardMaterial(
         { roughness: 0.05,
           metalness: 0.9,
-          envMap: background} );
+          envMap: textureEquirec
+          } );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
 				mesh.position.y = -1.5;
@@ -162,9 +161,10 @@
 
 					var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
           var material = new THREE.MeshStandardMaterial(
-            { roughness: 0.05,
+            { roughness: 0.1,
               metalness: 0.9,
-              envMap: background} );
+              envMap: textureEquirec
+              } );
 
 					var object = new THREE.Mesh( geometry, material );
 
@@ -205,7 +205,7 @@
 
 				document.body.appendChild( THREE.WEBVR.createButton( renderer ) );
 
-        
+
 				// controllers
 
 				controller1 = renderer.vr.getController( 0 );
@@ -280,7 +280,7 @@
 			}
 
 
-      
+
 			function getIntersections( controller ) {
 
 				tempMatrix.identity().extractRotation( controller.matrixWorld );
@@ -353,6 +353,7 @@
 				intersectObjects( controller2 );
 
 				var time = performance.now() * 0.0001;
+        textureEquirec.needsUpdate = true;
 				renderer.render( scene, camera );
 
 			}
