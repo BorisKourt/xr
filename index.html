@@ -96,17 +96,7 @@
 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 200 );
-
-        cubeCamera = new THREE.CubeCamera(0.1, 100, 256);
-        cubeCamera.renderTarget.texture.generateMipmaps = true;
-				cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
-        scene.add(cubeCamera);
-
-        cubeCameraB = new THREE.CubeCamera(0.1, 100, 256);
-        cubeCameraB.renderTarget.texture.generateMipmaps = true;
-				cubeCameraB.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
-        scene.add(cubeCameraB);
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 200 );
 
         var shader = THREE.ShaderLib.cube;
         shader.uniforms.tCube.value = background;
@@ -127,7 +117,7 @@
 				material = new THREE.MeshStandardMaterial(
         { roughness: 0.05,
           metalness: 0.9,
-          envMap: cubeCamera.renderTarget.texture } );
+          envMap: background} );
 
 
 				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
@@ -349,35 +339,13 @@
 			}
 
 			function render() {
-        
+
 				cleanIntersected();
 
 				intersectObjects( controller1 );
 				intersectObjects( controller2 );
 
 				var time = performance.now() * 0.0001;
-				var mesh = scene.children[ 3 ];
-				mesh.rotation.x = time * 2;
-				mesh.rotation.y = time * 5;
-
-
-        mesh.visible = false;
-      
-        if ( count % 2 === 0 ) {
-
-					material.envMap = cubeCameraB.renderTarget.texture;
-					cubeCamera.update( renderer, scene );
-
-				} else {
-
-					material.envMap = cubeCamera.renderTarget.texture;
-					cubeCameraB.update( renderer, scene );
-
-				}
-        count ++;
-
-        mesh.visible = true;
-
 				renderer.render( scene, camera );
 
 			}
