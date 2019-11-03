@@ -10,6 +10,18 @@ var material;
 var count = 0;
 var images = [];
 
+var current_360 = 1;
+var next_360 = 1;
+
+const slideActions = new Map([
+  [ 0, function() {
+    next_360 = 3;
+  }],
+  [ 1, function() {
+    next_360 = 2;
+  }]
+]);
+
 var clock = new THREE.Clock(true);
 clock.getDelta();
 
@@ -69,6 +81,8 @@ function init() {
 
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.gammaInput = true;
+  renderer.gammaOutput = true;
   renderer.shadowMap.enabled = false;
   renderer.vr.enabled = true;
   container.appendChild( renderer.domElement );
@@ -88,7 +102,7 @@ function init() {
     uniforms: equirectShader.uniforms,
     depthWrite: true,
     side: THREE.BackSide
-  } );
+  });
 
   equirectMaterial.uniforms[ "tEquirect" ].value = textureEquirec;
 
@@ -128,7 +142,7 @@ function init() {
   ];
 
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
-  const dragger_geo = new THREE.BoxBufferGeometry( 4, 0.1, 0.003 );
+  const dragger_geo = new THREE.BoxBufferGeometry( 0.1, 1.63, 0.003 );
 
   group = new THREE.Group();
   scene.add( group );
@@ -142,6 +156,7 @@ function init() {
         envMap: equirectMaterial.map
       } );
     const dragger = new THREE.Mesh(dragger_geo, material_dragger);
+    dragger.userData.id = i;
 
     const obj = new THREE.Mesh(
       plane_geo,
@@ -154,14 +169,14 @@ function init() {
         side: THREE.DoubleSide,
         transparent: true}));
 
-    obj.position.x = 0;
-    obj.position.y = 1.05;
+    obj.position.x = 2.05;
+    obj.position.y = 0.18;
 
     dragger.add(obj);
 
-    dragger.position.x = 0;
+    dragger.position.x = -2;
     dragger.position.y = 0;
-    dragger.position.z = -4 + (0.1 * i);
+    dragger.position.z = -2.5 + (0.075 * i);
 
     /*
     dragger.rotation.x = Math.random() * 2 * Math.PI;
@@ -182,7 +197,7 @@ function init() {
 
     var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
     var material_group = new THREE.MeshStandardMaterial(
-      { roughness: 0.01,
+      { roughness: 0.9,
         metalness: 0.9,
         //envMap: textureEquirec
         envMap: equirectMaterial.map
@@ -210,9 +225,7 @@ function init() {
 
   }
 
-
   document.body.appendChild( THREE.WEBVR.createButton( renderer ) );
-
 
   controller1 = renderer.vr.getController( 0 );
   controller1.addEventListener( 'selectstart', onSelectStart );
@@ -274,6 +287,11 @@ function onSelectEnd( event ) {
     object.matrix.premultiply( controller.matrixWorld );
     object.matrix.decompose( object.position, object.quaternion, object.scale );
     object.material.emissive.b = 0;
+
+    if (slideActions.has(object.userData.id)) {
+      slideActions.get(object.userData.id)();
+    }
+
     group.add( object );
 
     controller.userData.selected = undefined;
@@ -349,6 +367,8 @@ var frame = 0;
 var frame_rate = 23;
 var blender = 1;
 var frame_motion = 0;
+var current_360 = 1;
+var next_360 = 1;
 
 function render() {
 
@@ -363,24 +383,19 @@ function render() {
   if (clock.oldTime >= 1.0 / frame_rate) {
     clock.getDelta();
 
-    frame++;
-    if (frame == frame_rate) {
-      frame = 0;
+    if (current_360 != next_360) {
+
       frame_motion++;
+
       if (frame_motion == 20) {
         frame_motion = 0;
-        blender++;
-        if (blender == images.length) {
-          blender = 0;
-        }
+        current_360 = next_360;
       }
+      //ctx.save()
+      ctx.globalAlpha = frame_motion / 20.0;
+      ctx.drawImage(images[next_360], 0, 0);
+      //ctx.restore()
     }
-
-    ctx.save()
-    ctx.globalAlpha = frame_motion / 20.0;
-    ctx.drawImage(images[blender], 0, 0);
-    ctx.restore()
-
     textureEquirec.needsUpdate = true;
 
   }
