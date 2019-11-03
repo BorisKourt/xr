@@ -67,6 +67,9 @@
 			var raycaster, intersected = [];
 			var tempMatrix = new THREE.Matrix4();
 			var group;
+      var cubeCamera, cubeCameraB;
+      var material;
+      var count = 0;
 
 			init();
 			animate();
@@ -95,13 +98,22 @@
 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 200 );
 
+        cubeCamera = new THREE.CubeCamera(0.1, 100, 256);
+        cubeCamera.renderTarget.texture.generateMipmaps = true;
+				cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
+        scene.add(cubeCamera);
+
+        cubeCameraB = new THREE.CubeCamera(0.1, 100, 256);
+        cubeCameraB.renderTarget.texture.generateMipmaps = true;
+				cubeCameraB.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
+        scene.add(cubeCameraB);
 
         var shader = THREE.ShaderLib.cube;
         shader.uniforms.tCube.value = background;
 
-        var material = new THREE.ShaderMaterial({
+        var material2 = new THREE.ShaderMaterial({
 
           fragmentShader: shader.fragmentShader,
           vertexShader: shader.vertexShader,
@@ -111,12 +123,12 @@
 
         });
 
-        var mesh = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), material);
+        var mesh = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), material2);
         scene.add(mesh);
 
 
 				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
-				var material = new THREE.MeshStandardMaterial( { roughness: 0.05, metalness: 0.9, envMap: background } );
+				material = new THREE.MeshStandardMaterial( { roughness: 0.05, metalness: 0.9, envMap: cubeCamera.renderTarget.texture} );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -125,10 +137,9 @@
 				scene.add( mesh );
 
 				var geometry = new THREE.BoxBufferGeometry( 3, 0.01, 3 );
-				var material = new THREE.MeshStandardMaterial( { roughness: 0.1, metalness: 0.9, envMap: background } );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
-				mesh.position.y = 0;
+				mesh.position.y = -1.5;
 				mesh.position.z = 1;
         mesh.receiveShadow = true;
 				scene.add( mesh );
@@ -155,12 +166,6 @@
 				for ( var i = 0; i < 50; i ++ ) {
 
 					var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
-					var material = new THREE.MeshStandardMaterial( {
-						color: Math.random() * 0xffffff,
-						roughness: 0.01,
-						metalness: 0.9,
-            envMap: background
-					} );
 
 					var object = new THREE.Mesh( geometry, material );
 
@@ -349,9 +354,23 @@
 				intersectObjects( controller2 );
 
 				var time = performance.now() * 0.0001;
-				var mesh = scene.children[ 1 ];
+				var mesh = scene.children[ 3 ];
 				mesh.rotation.x = time * 2;
 				mesh.rotation.y = time * 5;
+
+      
+        if ( count % 2 === 0 ) {
+
+					material.envMap = cubeCamera.renderTarget.texture;
+					cubeCameraB.update( renderer, scene );
+
+				} else {
+
+					material.envMap = cubeCameraB.renderTarget.texture;
+					cubeCamera.update( renderer, scene );
+
+				}
+        count ++;
 
 				renderer.render( scene, camera );
 
