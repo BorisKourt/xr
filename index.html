@@ -63,6 +63,11 @@
 
 			var camera, scene, renderer, container;
 
+      var controller1, controller2;
+			var raycaster, intersected = [];
+			var tempMatrix = new THREE.Matrix4();
+			var group;
+
 			init();
 			animate();
 
@@ -78,6 +83,8 @@
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.shadowMap.enabled = true;
+        renderer.gammaInput = true;
+        renderer.gammaOutput = true;
 				renderer.vr.enabled = true;
         container.appendChild( renderer.domElement );
 
@@ -88,7 +95,7 @@
 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10 );
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
 
 
         var shader = THREE.ShaderLib.cube;
@@ -117,12 +124,12 @@
 				mesh.position.z = - 2;
 				scene.add( mesh );
 
-				var geometry = new THREE.BoxBufferGeometry( 1.5, 0.01, 1.5 );
+				var geometry = new THREE.BoxBufferGeometry( 3, 0.01, 3 );
 				var material = new THREE.MeshStandardMaterial( { roughness: 0.1, metalness: 0.9, envMap: background } );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
-				mesh.position.y = - 0.2;
-				mesh.position.z = - 2;
+				mesh.position.y = 0;
+				mesh.position.z = 1;
         mesh.receiveShadow = true;
 				scene.add( mesh );
 
@@ -133,6 +140,46 @@
 				scene.add( light );
 				light.target.position.set( 0, 0, - 2 );
 				scene.add( light.target );
+
+				group = new THREE.Group();
+				scene.add( group );
+
+				var geometries = [
+					new THREE.BoxBufferGeometry( 0.2, 0.2, 0.2 ),
+					new THREE.ConeBufferGeometry( 0.2, 0.2, 64 ),
+					new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.2, 64 ),
+					new THREE.IcosahedronBufferGeometry( 0.2, 3 ),
+					new THREE.TorusBufferGeometry( 0.2, 0.04, 64, 32 )
+				];
+
+				for ( var i = 0; i < 50; i ++ ) {
+
+					var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
+					var material = new THREE.MeshStandardMaterial( {
+						color: Math.random() * 0xffffff,
+						roughness: 0.01,
+						metalness: 0.9,
+            envMap: background
+					} );
+
+					var object = new THREE.Mesh( geometry, material );
+
+					object.position.x = Math.random() * 4 - 2;
+					object.position.y = Math.random() * 2;
+					object.position.z = Math.random() * 4 - 2;
+
+					object.rotation.x = Math.random() * 2 * Math.PI;
+					object.rotation.y = Math.random() * 2 * Math.PI;
+					object.rotation.z = Math.random() * 2 * Math.PI;
+
+					object.scale.setScalar( Math.random() + 0.5 );
+
+					object.castShadow = true;
+					object.receiveShadow = true;
+
+					group.add( object );
+
+				}
 
         /*
 				// var helper = new CameraHelper( light.shadow.camera );
@@ -154,9 +201,128 @@
 
 				document.body.appendChild( THREE.WEBVR.createButton( renderer ) );
 
+        
+				// controllers
+
+				controller1 = renderer.vr.getController( 0 );
+				controller1.addEventListener( 'selectstart', onSelectStart );
+				controller1.addEventListener( 'selectend', onSelectEnd );
+				scene.add( controller1 );
+
+				controller2 = renderer.vr.getController( 1 );
+				controller2.addEventListener( 'selectstart', onSelectStart );
+				controller2.addEventListener( 'selectend', onSelectEnd );
+				scene.add( controller2 );
+
+        				var geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
+
+				var line = new THREE.Line( geometry );
+				line.name = 'line';
+				line.scale.z = 5;
+
+				controller1.add( line.clone() );
+				controller2.add( line.clone() );
+
+				raycaster = new THREE.Raycaster();
+
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+
+      			function onSelectStart( event ) {
+
+				var controller = event.target;
+
+				var intersections = getIntersections( controller );
+
+				if ( intersections.length > 0 ) {
+
+					var intersection = intersections[ 0 ];
+
+					tempMatrix.getInverse( controller.matrixWorld );
+
+					var object = intersection.object;
+					object.matrix.premultiply( tempMatrix );
+					object.matrix.decompose( object.position, object.quaternion, object.scale );
+					object.material.emissive.b = 1;
+					controller.add( object );
+
+					controller.userData.selected = object;
+
+				}
+
+			}
+
+			function onSelectEnd( event ) {
+
+				var controller = event.target;
+
+				if ( controller.userData.selected !== undefined ) {
+
+					var object = controller.userData.selected;
+					object.matrix.premultiply( controller.matrixWorld );
+					object.matrix.decompose( object.position, object.quaternion, object.scale );
+					object.material.emissive.b = 0;
+					group.add( object );
+
+					controller.userData.selected = undefined;
+
+				}
+
+
+			}
+
+
+      
+			function getIntersections( controller ) {
+
+				tempMatrix.identity().extractRotation( controller.matrixWorld );
+
+				raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
+				raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
+
+				return raycaster.intersectObjects( group.children );
+
+			}
+
+			function intersectObjects( controller ) {
+
+				// Do not highlight when already selected
+
+				if ( controller.userData.selected !== undefined ) return;
+
+				var line = controller.getObjectByName( 'line' );
+				var intersections = getIntersections( controller );
+
+				if ( intersections.length > 0 ) {
+
+					var intersection = intersections[ 0 ];
+
+					var object = intersection.object;
+					object.material.emissive.r = 1;
+					intersected.push( object );
+
+					line.scale.z = intersection.distance;
+
+				} else {
+
+					line.scale.z = 5;
+
+				}
+
+			}
+
+			function cleanIntersected() {
+
+				while ( intersected.length ) {
+
+					var object = intersected.pop();
+					object.material.emissive.r = 0;
+
+				}
 
 			}
 
@@ -176,6 +342,11 @@
 			}
 
 			function render() {
+        
+				cleanIntersected();
+
+				intersectObjects( controller1 );
+				intersectObjects( controller2 );
 
 				var time = performance.now() * 0.0001;
 				var mesh = scene.children[ 1 ];
