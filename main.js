@@ -123,8 +123,8 @@ function init() {
 
   var geometries = [
     new THREE.ConeBufferGeometry( 0.2, 0.2, 64 ),
-    new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.2, 64 )
-    new THREE.IcosahedronBufferGeometry( 0.2, 3 ),
+    new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.2, 64 ),
+    new THREE.IcosahedronBufferGeometry( 0.2, 3 )
   ];
 
   for ( var i = 0; i < 10; i ++ ) {
