@@ -128,7 +128,7 @@ function init() {
   ];
 
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
-  const dragger_geo = new THREE.BoxBufferGeometry( 4, 0.05, 0.002 );
+  const dragger_geo = new THREE.BoxBufferGeometry( 4, 0.1, 0.003 );
 
   group = new THREE.Group();
   scene.add( group );
@@ -155,7 +155,7 @@ function init() {
         transparent: true}));
 
     obj.position.x = 0;
-    obj.position.y = 1;
+    obj.position.y = 1.05;
 
     dragger.add(obj);
 
