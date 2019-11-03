@@ -53,8 +53,10 @@ function init() {
     };
 
   }
+
+  var textureLoader = new THREE.TextureLoader();
+
   document.body.appendChild( canvas2 );
-  // Second Canvas
 
   container = document.createElement( 'div' );
   document.body.appendChild( container );
@@ -75,7 +77,7 @@ function init() {
 
   textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
   textureEquirec.magFilter = THREE.LinearFilter;
-  textureEquirec.minFilter = THREE.NearestFilter;
+  //textureEquirec.minFilter = THREE.NearestFilter;
   textureEquirec.needsUpdate = true;
 
   /*
@@ -100,48 +102,94 @@ function init() {
   });
   */
 
-  equirectMaterial = new THREE.MeshBasicMaterial( { map: textureEquirec } );
+  equirectMaterial = new THREE.MeshBasicMaterial( {
+    map: textureEquirec
+  } );
 
   var geometry2 = new THREE.SphereBufferGeometry( 100, 60, 40 );
   // invert the geometry on the x-axis so that all of the faces point inward
-  geometry2.scale( - 1, 1, 1 );
+  geometry2.scale( -1, 1, 1 );
 
   cubeMesh = new THREE.Mesh( geometry2, equirectMaterial );
   cubeMesh.material = equirectMaterial;
   cubeMesh.visible = true;
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 200 );
+  camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.05, 200 );
 
   scene.add(cubeMesh);
 
   slides = new THREE.Group();
   scene.add( slides );
 
+  var slideImages = [
+    textureLoader.load( "slides/slide1.png" ),
+    textureLoader.load( "slides/slide2.png" )
+  ];
+
+  const plane_geo = new THREE.PlaneGeometry( 4, 2 );
+  const dragger_geo = new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.005, 32 );
+
+  for ( var i = 0; i < slideImages.length; i ++ ) {
+
+    const material_dragger = new THREE.MeshStandardMaterial(
+      { roughness: 0.01,
+        metalness: 0.9,
+        envMap: textureEquirec
+        //envMap: equirectMaterial.map
+      } );
+    const dragger = new THREE.Mesh(dragger_geo, material_dragger);
+
+    const obj = new THREE.Mesh(
+      plane_geo,
+      new THREE.MeshBasicMaterial({
+        premultipliedAlpha: true,
+        depthWrite: true,
+        //alphaMap: alpha_node,
+        color: 0xffffff,
+        map: slideImages[i],
+        side: THREE.DoubleSide,
+        transparent: true}));
+
+    dragger.add(obj);
+
+    dragger.position.x = 0;
+    dragger.position.y = 1;
+    dragger.position.z = -1 + (0.1 * i);
+
+    /*
+    dragger.rotation.x = Math.random() * 2 * Math.PI;
+    dragger.rotation.y = Math.random() * 2 * Math.PI;
+    dragger.rotation.z = Math.random() * 2 * Math.PI;
+    */
+
+    slides.add(dragger);
+
+  }
+
   group = new THREE.Group();
   scene.add( group );
 
   var geometries = [
-    new THREE.ConeBufferGeometry( 0.2, 0.2, 64 ),
-    new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.2, 64 ),
+    new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.005, 32 ),
     new THREE.IcosahedronBufferGeometry( 0.2, 3 )
   ];
 
-  for ( var i = 0; i < 10; i ++ ) {
+  for ( var i = 0; i < 32; i ++ ) {
 
     var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
-    var material = new THREE.MeshStandardMaterial(
-      { roughness: 0.2,
+    var material_group = new THREE.MeshStandardMaterial(
+      { roughness: 0.01,
         metalness: 0.9,
         envMap: textureEquirec
         //envMap: equirectMaterial.map
       } );
 
-    var object = new THREE.Mesh( geometry, material );
+    var object = new THREE.Mesh( geometry, material_group );
 
-    object.position.x = Math.random() * 4 - 2;
+    object.position.x = Math.random() * 6 - 3;
     object.position.y = Math.random() * 2;
-    object.position.z = Math.random() * 4 - 2;
+    object.position.z = Math.random() * 6 - 3;
 
     object.rotation.x = Math.random() * 2 * Math.PI;
     object.rotation.y = Math.random() * 2 * Math.PI;
@@ -320,7 +368,7 @@ function render() {
     }
 
     ctx.save()
-    ctx.globalAlpha = (2048 * time) % 2048 / 2048;
+    ctx.globalAlpha = frame_motion / 20.0;
     ctx.drawImage(images[blender], 0, 0);
     ctx.restore()
 
