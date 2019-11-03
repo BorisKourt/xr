@@ -136,10 +136,34 @@ function init() {
   slides = new THREE.Group();
   scene.add( slides );
 
+  const test_slide = textureLoader.load( "slides/slide2.png" );
+
   var slideImages = [
     textureLoader.load( "slides/slide1.png" ),
-    textureLoader.load( "slides/slide2.png" )
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide,
+    test_slide
   ];
+
+  slideImages.reverse();
 
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
   const dragger_geo = new THREE.BoxBufferGeometry( 0.1, 1.63, 0.003 );
