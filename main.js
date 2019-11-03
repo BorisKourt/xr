@@ -130,6 +130,9 @@ function init() {
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
   const dragger_geo = new THREE.BoxBufferGeometry( 0.25, 0.25, 0.002 );
 
+  group = new THREE.Group();
+  scene.add( group );
+
   for ( var i = 0; i < slideImages.length; i ++ ) {
 
     const material_dragger = new THREE.MeshStandardMaterial(
@@ -157,7 +160,7 @@ function init() {
     dragger.add(obj);
 
     dragger.position.x = -2;
-    dragger.position.y = -1;
+    dragger.position.y = 0;
     dragger.position.z = -4 + (0.1 * i);
 
     /*
@@ -166,12 +169,10 @@ function init() {
     */
 
 
-    slides.add(dragger);
+    group.add(dragger);
 
   }
 
-  group = new THREE.Group();
-  scene.add( group );
 
   var geometries = [
     new THREE.CylinderBufferGeometry( 0.4, 0.4, 0.005, 32 ),
@@ -274,7 +275,7 @@ function onSelectEnd( event ) {
     object.matrix.premultiply( controller.matrixWorld );
     object.matrix.decompose( object.position, object.quaternion, object.scale );
     object.material.emissive.b = 0;
-    slides.add( object );
+    group.add( object );
 
     controller.userData.selected = undefined;
 
@@ -290,7 +291,7 @@ function getIntersections( controller ) {
   raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
   raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
 
-  return raycaster.intersectObjects( slides.children);
+  return raycaster.intersectObjects( group.children);
 
 }
 
