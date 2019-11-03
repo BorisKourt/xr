@@ -175,7 +175,7 @@ function init() {
     dragger.add(obj);
 
     dragger.position.x = -2;
-    dragger.position.y = 0;
+    dragger.position.y = 1;
     dragger.position.z = -2.5 + (0.075 * i);
 
     /*
@@ -207,11 +207,11 @@ function init() {
 
     if (i % 2 == 0) {
       object.position.x = Math.random() * 10 - 5;
-      object.position.y = Math.random() * 2;
+      object.position.y = Math.random() * -5;
       object.position.z = Math.random() * -5 - 0.5;
     } else {
       object.position.x = Math.random() * 10 - 5;
-      object.position.y = Math.random() * 2;
+      object.position.y = Math.random() * 5;
       object.position.z = Math.random() * 5 + 0.5;
     }
 
