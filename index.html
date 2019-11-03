@@ -114,13 +114,12 @@
         var mesh = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), material2);
         scene.add(mesh);
 
-				material = new THREE.MeshStandardMaterial(
+
+				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
+				var material = new THREE.MeshStandardMaterial(
         { roughness: 0.05,
           metalness: 0.9,
           envMap: background} );
-
-
-				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -129,6 +128,10 @@
 				scene.add( mesh );
 
 				var geometry = new THREE.BoxBufferGeometry( 3, 0.01, 3 );
+				var material = new THREE.MeshStandardMaterial(
+        { roughness: 0.05,
+          metalness: 0.9,
+          envMap: background} );
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.castShadow = true;
 				mesh.position.y = -1.5;
@@ -158,6 +161,10 @@
 				for ( var i = 0; i < 50; i ++ ) {
 
 					var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
+          var material = new THREE.MeshStandardMaterial(
+            { roughness: 0.05,
+              metalness: 0.9,
+              envMap: background} );
 
 					var object = new THREE.Mesh( geometry, material );
 
