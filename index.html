@@ -61,310 +61,115 @@
 
 		<div id="container"></div>
 
-		<script type="module">
+    <script type="text/javascript">
 
-      //const polyfill = new WebXRPolyfill();
-
-			var container;
-			var renderer;
-			var transition;
-
-			var transitionParams = {
-				"useTexture": true,
-				"transition": 0.5,
-				"transitionSpeed": 2.0,
-				"texture": 5,
-				"loopTexture": true,
-				"animateTransition": true,
-				"textureThreshold": 0.3
-			};
-
-			var clock = new THREE.Clock();
+			var camera, scene, renderer;
 
 			init();
 			animate();
 
 			function init() {
 
-				container = document.getElementById( "container" );
+				var background = new THREE.CubeTextureLoader()
+					.setPath( 'munch1/' )
+					.load( [ 'px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png' ] );
+				background.format = THREE.RGBFormat;
 
-        var canvas = document.createElement( 'canvas' );
-        var context = canvas.getContext( 'webgl2', { antialias: false, alpha: false } );
-        renderer = new THREE.WebGLRenderer( { canvas: canvas, context: context } );
+				scene = new THREE.Scene();
+				scene.background = background;
 
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10 );
+
+				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
+				var material = new THREE.MeshStandardMaterial( { roughness: 0.01, metalness: 0.4, envMap: background } );
+				var mesh = new THREE.Mesh( geometry, material );
+				mesh.position.y = 0.75;
+				mesh.position.z = - 2;
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				scene.add( mesh );
+
+				var geometry = new THREE.BoxBufferGeometry( 1.5, 0.01, 1.5 );
+				var material = new THREE.MeshStandardMaterial( { roughness: 0.1, metalness: 0.8, envMap: background } );
+				var mesh = new THREE.Mesh( geometry, material );
+				mesh.position.y = - 0.2;
+				mesh.position.z = - 2;
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				scene.add( mesh );
+
+				var light = new THREE.DirectionalLight( 0x666666 );
+				light.position.set( - 1, 1.5, - 1.5 );
+				light.castShadow = true;
+				light.shadow.camera.zoom = 4;
+				scene.add( light );
+				light.target.position.set( 0, 0, - 2 );
+				scene.add( light.target );
+
+        /*
+				// var helper = new CameraHelper( light.shadow.camera );
+				// scene.add( helper );
+
+				var light = new THREE.DirectionalLight( 0xffffff );
+				light.position.set( 1, 1.5, - 2.5 );
+				light.castShadow = true;
+				light.shadow.camera.zoom = 4;
+				scene.add( light );
+				light.target.position.set( 0, 0, - 2 );
+				scene.add( light.target );
+        */
+
+				// var helper = new CameraHelper( light.shadow.camera );
+				// scene.add( helper );
+
+				var geometry = new THREE.BoxBufferGeometry( 1.5, 1.5, 0.1 );
+				var material = new THREE.MeshPhongMaterial();
+				var mesh = new THREE.Mesh( geometry, material );
+				mesh.position.z = - 0.07;
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+
+				//
+
+				renderer = new THREE.WebGLRenderer( { antialias: false} );
+				renderer.autoClear = false;
 				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.vr.enabled = true;
 				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
+				renderer.shadowMap.enabled = true;
+				renderer.vr.enabled = true;
+				document.body.appendChild( renderer.domElement );
 
-				var sceneA = new FXScene( "cube", 100, 1200, 120, new THREE.Vector3( 0, - 0.4, 0 ), 0xffffff );
-				var sceneB = new FXScene( "sphere", 100, 2000, 50, new THREE.Vector3( 0, 0.2, 0.1 ), 0x000000 );
+				document.body.appendChild( THREE.WEBVR.createButton( renderer ) );
 
-				transition = new Transition( sceneA, sceneB );
+				//
 
-        document.body.appendChild( THREE.WEBVR.createButton( renderer ) );
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
 
 			function animate() {
 
-				requestAnimationFrame( animate );
-
-				render();
+				renderer.setAnimationLoop( render );
 
 			}
 
 			function render() {
 
-				transition.render( clock.getDelta() );
-
-			}
-
-			function generateGeometry( objectType, numObjects ) {
-
-				function applyVertexColors( geometry, color ) {
-
-					var position = geometry.attributes.position;
-					var colors = [];
-
-					for ( var i = 0; i < position.count; i ++ ) {
-
-						colors.push( color.r, color.g, color.b );
-
-					}
-
-					geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-
-				}
-
-				var geometries = [];
-
-				var matrix = new THREE.Matrix4();
-				var position = new THREE.Vector3();
-				var rotation = new THREE.Euler();
-				var quaternion = new THREE.Quaternion();
-				var scale = new THREE.Vector3();
-				var color = new THREE.Color();
-
-				for ( var i = 0; i < numObjects; i ++ ) {
-
-					position.x = Math.random() * 10000 - 5000;
-					position.y = Math.random() * 6000 - 3000;
-					position.z = Math.random() * 8000 - 4000;
-
-					rotation.x = Math.random() * 2 * Math.PI;
-					rotation.y = Math.random() * 2 * Math.PI;
-					rotation.z = Math.random() * 2 * Math.PI;
-					quaternion.setFromEuler( rotation );
-
-					scale.x = Math.random() * 200 + 100;
-
-					var geometry;
-
-					if ( objectType === 'cube' ) {
-
-						geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-						geometry = geometry.toNonIndexed(); // merging needs consistent buffer geometries
-						scale.y = Math.random() * 200 + 100;
-						scale.z = Math.random() * 200 + 100;
-						color.setRGB( 0, 0, 0.1 + 0.9 * Math.random() );
-
-					} else if ( objectType === 'sphere' ) {
-
-						geometry = new THREE.IcosahedronBufferGeometry( 1, 1 );
-						scale.y = scale.z = scale.x;
-						color.setRGB( 0.1 + 0.9 * Math.random(), 0, 0 );
-
-					}
-
-					// give the geom's vertices a random color, to be displayed
-					applyVertexColors( geometry, color );
-
-					matrix.compose( position, quaternion, scale );
-					geometry.applyMatrix( matrix );
-
-					geometries.push( geometry );
-
-				}
-
-				return THREE.BufferGeometryUtils.mergeBufferGeometries( geometries );
-
-			}
-
-			function FXScene( type, numObjects, cameraZ, fov, rotationSpeed, clearColor ) {
-
-        var background = new THREE.CubeTextureLoader()
-					.setPath( 'munch1/' )
-					.load( [ 'px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png' ] );
-				background.format = THREE.RGBFormat;
-
-				this.clearColor = clearColor;
-
-				this.camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 10000 );
-				this.camera.position.z = cameraZ;
-
-				// Setup scene
-				this.scene = new THREE.Scene();
-				this.scene.add( new THREE.AmbientLight( 0x555555 ) );
-        this.scene.background = background;
-
-				var light = new THREE.SpotLight( 0xffffff, 1.5 );
-				light.position.set( 0, 500, 2000 );
-				this.scene.add( light );
-
-				this.rotationSpeed = rotationSpeed;
-
-				var defaultMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true, vertexColors: THREE.VertexColors } );
-				this.mesh = new THREE.Mesh( generateGeometry( type, numObjects ), defaultMaterial );
-				this.scene.add( this.mesh );
-
-				var renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
-				this.fbo = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, renderTargetParameters );
-
-				this.render = function ( delta, rtt ) {
-
-					this.mesh.rotation.x += delta * this.rotationSpeed.x;
-					this.mesh.rotation.y += delta * this.rotationSpeed.y;
-					this.mesh.rotation.z += delta * this.rotationSpeed.z;
-
-					//renderer.setClearColor( this.clearColor );
-
-					if ( rtt ) {
-
-						renderer.setRenderTarget( this.fbo );
-						renderer.clear();
-						renderer.render( this.scene, this.camera );
-
-					} else {
-
-						renderer.setRenderTarget( null );
-						renderer.render( this.scene, this.camera );
-
-					}
-
-				};
-
-			}
-
-			function Transition( sceneA, sceneB ) {
-
-				this.scene = new THREE.Scene();
-
-				this.cameraOrtho = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 10, 10 );
-
-				this.textures = [];
-
-				var loader = new THREE.TextureLoader();
-
-				for ( var i = 0; i < 6; i ++ )
-					this.textures[ i ] = loader.load( 'transition/transition' + ( i + 1 ) + '.png' );
-
-				this.quadmaterial = new THREE.ShaderMaterial( {
-
-					uniforms: {
-						tDiffuse1: {
-							value: null
-						},
-						tDiffuse2: {
-							value: null
-						},
-						mixRatio: {
-							value: 0.0
-						},
-						threshold: {
-							value: 0.1
-						},
-						useTexture: {
-							value: 1
-						},
-						tMixTexture: {
-							value: this.textures[ 0 ]
-						}
-					},
-					vertexShader: document.getElementById( 'vs' ).textContent.trim(),
-					fragmentShader: document.getElementById( 'fs' ).textContent.trim()
-				} );
-
-				var quadgeometry = new THREE.PlaneBufferGeometry( window.innerWidth, window.innerHeight );
-
-				this.quad = new THREE.Mesh( quadgeometry, this.quadmaterial );
-				this.scene.add( this.quad );
-
-				// Link both scenes and their FBOs
-				this.sceneA = sceneA;
-				this.sceneB = sceneB;
-
-				this.quadmaterial.uniforms.tDiffuse1.value = sceneA.fbo.texture;
-				this.quadmaterial.uniforms.tDiffuse2.value = sceneB.fbo.texture;
-
-				this.needChange = false;
-
-				this.setTextureThreshold = function ( value ) {
-
-					this.quadmaterial.uniforms.threshold.value = value;
-
-				};
-
-				this.useTexture = function ( value ) {
-
-					this.quadmaterial.uniforms.useTexture.value = value ? 1 : 0;
-
-				};
-
-				this.setTexture = function ( i ) {
-
-					this.quadmaterial.uniforms.tMixTexture.value = this.textures[ i ];
-
-				};
-
-				this.render = function ( delta ) {
-
-					// Transition animation
-					if ( transitionParams.animateTransition ) {
-
-						var t = ( 1 + Math.sin( transitionParams.transitionSpeed * clock.getElapsedTime() / Math.PI ) ) / 2;
-						transitionParams.transition = THREE.Math.smoothstep( t, 0.3, 0.7 );
-
-						// Change the current alpha texture after each transition
-						if ( transitionParams.loopTexture && ( transitionParams.transition == 0 || transitionParams.transition == 1 ) ) {
-
-							if ( this.needChange ) {
-
-								transitionParams.texture = ( transitionParams.texture + 1 ) % this.textures.length;
-								this.quadmaterial.uniforms.tMixTexture.value = this.textures[ transitionParams.texture ];
-								this.needChange = false;
-
-							}
-
-						} else
-							this.needChange = true;
-
-					}
-
-					this.quadmaterial.uniforms.mixRatio.value = transitionParams.transition;
-
-					// Prevent render both scenes when it's not necessary
-					if ( transitionParams.transition == 0 ) {
-
-						this.sceneB.render( delta, false );
-
-					} else if ( transitionParams.transition == 1 ) {
-
-						this.sceneA.render( delta, false );
-
-					} else {
-
-						// When 0<transition<1 render transition between two scenes
-
-						this.sceneA.render( delta, true );
-						this.sceneB.render( delta, true );
-						renderer.setRenderTarget( null );
-						renderer.clear();
-						renderer.render( this.scene, this.cameraOrtho );
-
-					}
-
-				};
+				var time = performance.now() * 0.0002;
+				var mesh = scene.children[ 0 ];
+				mesh.rotation.x = time * 2;
+				mesh.rotation.y = time * 5;
+
+				renderer.render( scene, camera );
 
 			}
 
