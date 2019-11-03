@@ -80,7 +80,6 @@ function init() {
   textureEquirec.minFilter = THREE.NearestFilter;
   textureEquirec.needsUpdate = true;
 
-  /*
   var equirectShader = THREE.ShaderLib[ "equirect" ];
 
   var equirectMaterial = new THREE.ShaderMaterial( {
@@ -100,15 +99,16 @@ function init() {
 
     }
   });
-  */
 
+  /*
   equirectMaterial = new THREE.MeshBasicMaterial( {
     map: textureEquirec
   } );
+  */
 
   var geometry2 = new THREE.SphereBufferGeometry( 100, 60, 40 );
   // invert the geometry on the x-axis so that all of the faces point inward
-  geometry2.scale( -1, 1, 1 );
+  // geometry2.scale( -1, 1, 1 );
 
   cubeMesh = new THREE.Mesh( geometry2, equirectMaterial );
   cubeMesh.material = equirectMaterial;
@@ -128,7 +128,7 @@ function init() {
   ];
 
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
-  const dragger_geo = new THREE.BoxBufferGeometry( 0.25, 0.25, 0.002 );
+  const dragger_geo = new THREE.BoxBufferGeometry( 4, 0.05, 0.002 );
 
   group = new THREE.Group();
   scene.add( group );
@@ -136,10 +136,10 @@ function init() {
   for ( var i = 0; i < slideImages.length; i ++ ) {
 
     const material_dragger = new THREE.MeshStandardMaterial(
-      { roughness: 0.9,
-        metalness: 0.5,
-        envMap: textureEquirec
-        //envMap: equirectMaterial.map
+      { roughness: 0.05,
+        metalness: 0.9,
+        //envMap: textureEquirec
+        envMap: equirectMaterial.map
       } );
     const dragger = new THREE.Mesh(dragger_geo, material_dragger);
 
@@ -154,12 +154,12 @@ function init() {
         side: THREE.DoubleSide,
         transparent: true}));
 
-    obj.position.x =1.9;
-    obj.position.y = 0.9;
+    obj.position.x = 0;
+    obj.position.y = 1;
 
     dragger.add(obj);
 
-    dragger.position.x = -2;
+    dragger.position.x = 0;
     dragger.position.y = 0;
     dragger.position.z = -4 + (0.1 * i);
 
@@ -184,8 +184,8 @@ function init() {
     var material_group = new THREE.MeshStandardMaterial(
       { roughness: 0.01,
         metalness: 0.9,
-        envMap: textureEquirec
-        //envMap: equirectMaterial.map
+        //envMap: textureEquirec
+        envMap: equirectMaterial.map
       } );
 
     var object = new THREE.Mesh( geometry, material_group );
