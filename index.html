@@ -59,16 +59,27 @@
       }
     </script>
 
-		<div id="container"></div>
-
     <script type="text/javascript">
 
-			var camera, scene, renderer;
+			var camera, scene, renderer, container;
 
 			init();
 			animate();
 
 			function init() {
+
+        container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+        var canvas = document.createElement( 'canvas' );
+				var context = canvas.getContext( 'webgl2', { antialias: false, alpha: false } );
+				renderer = new THREE.WebGLRenderer( { canvas: canvas, context: context } );
+
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.shadowMap.enabled = true;
+				renderer.vr.enabled = true;
+        container.appendChild( renderer.domElement );
 
 				var background = new THREE.CubeTextureLoader()
 					.setPath( 'munch1/' )
@@ -81,21 +92,21 @@
 				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10 );
 
 				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
-				var material = new THREE.MeshStandardMaterial( { roughness: 0.01, metalness: 0.4, envMap: background } );
+				var material = new THREE.MeshStandardMaterial( { roughness: 0.05, metalness: 0.9, envMap: background } );
 				var mesh = new THREE.Mesh( geometry, material );
+				mesh.castShadow = true;
+        mesh.receiveShadow = true;
 				mesh.position.y = 0.75;
 				mesh.position.z = - 2;
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;
 				scene.add( mesh );
 
 				var geometry = new THREE.BoxBufferGeometry( 1.5, 0.01, 1.5 );
-				var material = new THREE.MeshStandardMaterial( { roughness: 0.1, metalness: 0.8, envMap: background } );
+				var material = new THREE.MeshStandardMaterial( { roughness: 0.1, metalness: 0.9, envMap: background } );
 				var mesh = new THREE.Mesh( geometry, material );
+				mesh.castShadow = true;
 				mesh.position.y = - 0.2;
 				mesh.position.z = - 2;
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;
+        mesh.receiveShadow = true;
 				scene.add( mesh );
 
 				var light = new THREE.DirectionalLight( 0x666666 );
@@ -122,22 +133,7 @@
 				// var helper = new CameraHelper( light.shadow.camera );
 				// scene.add( helper );
 
-				var geometry = new THREE.BoxBufferGeometry( 1.5, 1.5, 0.1 );
-				var material = new THREE.MeshPhongMaterial();
-				var mesh = new THREE.Mesh( geometry, material );
-				mesh.position.z = - 0.07;
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;
 
-				//
-
-				renderer = new THREE.WebGLRenderer( { antialias: false} );
-				renderer.autoClear = false;
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.shadowMap.enabled = true;
-				renderer.vr.enabled = true;
-				document.body.appendChild( renderer.domElement );
 
 				document.body.appendChild( THREE.WEBVR.createButton( renderer ) );
 
@@ -164,7 +160,7 @@
 
 			function render() {
 
-				var time = performance.now() * 0.0002;
+				var time = performance.now() * 0.00002;
 				var mesh = scene.children[ 0 ];
 				mesh.rotation.x = time * 2;
 				mesh.rotation.y = time * 5;
