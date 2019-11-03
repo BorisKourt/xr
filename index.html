@@ -14,6 +14,7 @@
     <script type="text/javascript">
 
       var camera, scene, renderer, container, textureEquirec, equirectMaterial;
+      var canvas2, ctx;
 
       var controller1, controller2;
 			var raycaster, intersected = [];
@@ -28,10 +29,10 @@
 
 			function init() {
 
-        var canvas2 = document.createElement('canvas');
+        canvas2 = document.createElement('canvas');
 
         if (canvas2.getContext) {
-          var ctx = canvas2.getContext('2d', { antialias: false, alpha: false });
+          ctx = canvas2.getContext('2d', { antialias: false, alpha: false });
           canvas2.width = 4096;
           canvas2.height = 2048;
           canvas2.style.position = "absolute";
@@ -76,7 +77,6 @@
         textureEquirec.minFilter = THREE.NearestFilter;
         textureEquirec.needsUpdate = true;
 
-        /*
         var equirectShader = THREE.ShaderLib[ "equirect" ];
 
         var equirectMaterial = new THREE.ShaderMaterial( {
@@ -96,12 +96,11 @@
 
           }
         });
-        */
-        equirectMaterial = new THREE.MeshBasicMaterial( { map: textureEquirec } );
+        //equirectMaterial = new THREE.MeshBasicMaterial( { map: textureEquirec } );
 
-        var geometry2 = new THREE.SphereBufferGeometry( 10, 60, 40 );
+        var geometry2 = new THREE.SphereBufferGeometry( 100, 60, 40 );
 				// invert the geometry on the x-axis so that all of the faces point inward
-				geometry2.scale( - 1, 1, 1 );
+				//geometry2.scale( - 1, 1, 1 );
 
         cubeMesh = new THREE.Mesh( geometry2, equirectMaterial );
         cubeMesh.material = equirectMaterial;
@@ -353,7 +352,11 @@
 				intersectObjects( controller2 );
 
 				var time = performance.now() * 0.0001;
+
+
+        ctx.fillRect((4096 * time) % 4096, (2048 * time) % 2048, 50, 50);
         textureEquirec.needsUpdate = true;
+
 				renderer.render( scene, camera );
 
 			}
