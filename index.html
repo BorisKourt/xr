@@ -87,9 +87,26 @@
 				background.format = THREE.RGBFormat;
 
 				scene = new THREE.Scene();
-				scene.background = background;
 
 				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10 );
+
+
+        var shader = THREE.ShaderLib.cube;
+        shader.uniforms.tCube.value = background;
+
+        var material = new THREE.ShaderMaterial({
+
+          fragmentShader: shader.fragmentShader,
+          vertexShader: shader.vertexShader,
+          uniforms: shader.uniforms,
+          depthWrite: false,
+          side: THREE.BackSide
+
+        });
+
+        var mesh = new THREE.Mesh(new THREE.BoxGeometry(6, 6, 6), material);
+        scene.add(mesh);
+
 
 				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
 				var material = new THREE.MeshStandardMaterial( { roughness: 0.05, metalness: 0.9, envMap: background } );
@@ -160,8 +177,8 @@
 
 			function render() {
 
-				var time = performance.now() * 0.00002;
-				var mesh = scene.children[ 0 ];
+				var time = performance.now() * 0.0001;
+				var mesh = scene.children[ 1 ];
 				mesh.rotation.x = time * 2;
 				mesh.rotation.y = time * 5;
 
