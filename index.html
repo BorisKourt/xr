@@ -23,6 +23,9 @@
       var cubeCamera, cubeCameraB;
       var material;
       var count = 0;
+      var images = [];
+      var clock = new THREE.Clock(true);
+          clock.getDelta();
 
 			init();
 			animate();
@@ -33,27 +36,35 @@
 
         if (canvas2.getContext) {
           ctx = canvas2.getContext('2d', { antialias: false, alpha: false });
+
           canvas2.width = 4096;
           canvas2.height = 2048;
+
           canvas2.style.position = "absolute";
 
           ctx.fillStyle = "rgba(200, 200, 0, 0.5)";
           ctx.fillRect(0, 0, 4096, 2048);
 
           //Loading of the home test image - img1
-          var img1 = new Image();
+          images.push(new Image());
+          images[0].src = 'images/0__D5AgPtPU4AACFMi_1572276799.jpg';
+          images.push(new Image());
+          images[1].src = 'images/balkestetindfog_1572276651.jpg';
+          images.push(new Image());
+          images[2].src = 'images/boygen2_1572276679.jpg';
+          images.push(new Image());
+          images[3].src = 'images/lars_hertervig_the_tarn_1572276611.jpg';
+          images.push(new Image());
+          images[4].src = 'images/odd_nerdrum_selvportrett_1572276574.jpg';
+          images.push(new Image());
+          images[5].src = 'images/vg1_1572276735.jpg';
 
           //drawing of the test image - img1
-          img1.onload = function () {
+          images[0].onload = function () {
             //draw background image
-            ctx.drawImage(img1, 0, 0);
-            //draw a box over the top
-            ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
-            ctx.fillRect(0, 0, 500, 500);
-
+            ctx.drawImage(images[0], 0, 0);
           };
 
-          img1.src = 'images/frans_widerberg_1572276471.jpg';
         }
 				document.body.appendChild( canvas2 );
 
@@ -67,7 +78,7 @@
 
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.enabled = false;
 				renderer.vr.enabled = true;
         container.appendChild( renderer.domElement );
 
@@ -111,40 +122,6 @@
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 200 );
 
-				var geometry = new THREE.TorusKnotBufferGeometry( 0.4, 0.15, 150, 20 );
-				var material = new THREE.MeshStandardMaterial(
-        { roughness: 0.05,
-          metalness: 0.9,
-          envMap: textureEquirec
-          } );
-				var mesh = new THREE.Mesh( geometry, material );
-				mesh.castShadow = true;
-        mesh.receiveShadow = true;
-				mesh.position.y = 0.75;
-				mesh.position.z = - 2;
-				scene.add( mesh );
-
-				var geometry = new THREE.BoxBufferGeometry( 3, 0.01, 3 );
-				var material = new THREE.MeshStandardMaterial(
-        { roughness: 0.05,
-          metalness: 0.9,
-          envMap: textureEquirec
-          } );
-				var mesh = new THREE.Mesh( geometry, material );
-				mesh.castShadow = true;
-				mesh.position.y = -1.5;
-				mesh.position.z = 1;
-        mesh.receiveShadow = true;
-				scene.add( mesh );
-
-				var light = new THREE.DirectionalLight( 0x666666 );
-				light.position.set( - 1, 1.5, - 1.5 );
-				light.castShadow = true;
-				light.shadow.camera.zoom = 4;
-				scene.add( light );
-				light.target.position.set( 0, 0, - 2 );
-				scene.add( light.target );
-
 				group = new THREE.Group();
 				scene.add( group );
 
@@ -156,13 +133,13 @@
 					new THREE.TorusBufferGeometry( 0.2, 0.04, 64, 32 )
 				];
 
-				for ( var i = 0; i < 50; i ++ ) {
+				for ( var i = 0; i < 10; i ++ ) {
 
 					var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
           var material = new THREE.MeshStandardMaterial(
-            { roughness: 0.1,
+            { roughness: 0.2,
               metalness: 0.9,
-              envMap: textureEquirec
+              envMap: equirectMaterial.map
               } );
 
 					var object = new THREE.Mesh( geometry, material );
@@ -177,8 +154,8 @@
 
 					object.scale.setScalar( Math.random() + 0.5 );
 
-					object.castShadow = true;
-					object.receiveShadow = true;
+					//object.castShadow = true;
+					//object.receiveShadow = true;
 
 					group.add( object );
 
@@ -204,8 +181,6 @@
 
 				document.body.appendChild( THREE.WEBVR.createButton( renderer ) );
 
-
-				// controllers
 
 				controller1 = renderer.vr.getController( 0 );
 				controller1.addEventListener( 'selectstart', onSelectStart );
@@ -235,7 +210,7 @@
 			}
 
 
-      			function onSelectStart( event ) {
+      function onSelectStart( event ) {
 
 				var controller = event.target;
 
@@ -344,6 +319,11 @@
 
 			}
 
+      var frame = 0;
+      var frame_rate = 23;
+      var blender = 1;
+      var frame_motion = 0;
+
 			function render() {
 
 				cleanIntersected();
@@ -351,11 +331,32 @@
 				intersectObjects( controller1 );
 				intersectObjects( controller2 );
 
-				var time = performance.now() * 0.0001;
+				var time = performance.now() * 0.000001;
 
+        if (clock.oldTime >= 1.0 / frame_rate) {
+          clock.getDelta();
 
-        ctx.fillRect((4096 * time) % 4096, (2048 * time) % 2048, 50, 50);
-        textureEquirec.needsUpdate = true;
+          frame++;
+          if (frame == frame_rate) {
+            frame = 0;
+            frame_motion++;
+            if (frame_motion == 20) {
+              frame_motion = 0;
+              blender++;
+              if (blender == images.length) {
+                blender = 0;
+              }
+            }
+          }
+
+          ctx.save()
+          ctx.globalAlpha = (2048 * time) % 2048 / 2048;
+          ctx.drawImage(images[blender], 0, 0);
+          ctx.restore()
+
+          textureEquirec.needsUpdate = true;
+
+        }
 
 				renderer.render( scene, camera );
 
