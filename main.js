@@ -1,6 +1,8 @@
 var camera, scene, renderer, container, textureEquirec, equirectMaterial;
 var canvas2, ctx;
 
+const frame_rate = 23;
+
 var controller1, controller2;
 var raycaster, intersected = [];
 var tempMatrix = new THREE.Matrix4();
@@ -10,15 +12,24 @@ var material;
 var count = 0;
 var images = [];
 
-var current_360 = 1;
-var next_360 = 1;
+var current_360 = 0;
+var next_360 = 0;
+
+var show_grid = false;
+var frame_motion = 20;
 
 const slideActions = new Map([
   [ 0, function() {
     next_360 = 3;
+    frame_motion = 0;
   }],
   [ 1, function() {
-    next_360 = 2;
+    next_360 = 3;
+    frame_motion = 0;
+  }],
+  [ 2, function() {
+    show_grid = !show_grid;
+    frame_motion = 0;
   }]
 ]);
 
@@ -34,15 +45,12 @@ function init() {
 
   // Second Canvas
   if (canvas2.getContext) {
-    ctx = canvas2.getContext('2d', { antialias: false, alpha: false });
+    ctx = canvas2.getContext('2d', { antialias: false, alpha: false});
 
     canvas2.width = 4096;
     canvas2.height = 2048;
 
     canvas2.style.position = "absolute";
-
-    ctx.fillStyle = "rgba(200, 200, 0, 0.5)";
-    ctx.fillRect(0, 0, 4096, 2048);
 
     //Loading of the home test image - img1
     images.push(new Image());
@@ -58,9 +66,7 @@ function init() {
     images.push(new Image());
     images[5].src = 'images/vg1_1572276735.jpg';
 
-    //drawing of the test image - img1
     images[0].onload = function () {
-      //draw background image
       ctx.drawImage(images[0], 0, 0);
     };
 
@@ -388,13 +394,7 @@ function animate() {
   renderer.setAnimationLoop( render );
 }
 
-var frame = 0;
-var frame_rate = 23;
-var blender = 1;
-var frame_motion = 0;
-var current_360 = 1;
-var next_360 = 1;
-
+var previous_clock = 0;
 function render() {
 
   cleanIntersected();
@@ -404,23 +404,31 @@ function render() {
 
   var time = performance.now() * 0.00001;
 
-  // Animate other canvas at a different frame rate.
-  if (clock.oldTime >= 1.0 / frame_rate) {
-    clock.getDelta();
+  var elapsed = clock.getElapsedTime();
+  if (elapsed - previous_clock >= 1.0 / frame_rate) {
+    previous_clock = elapsed;
 
     if (current_360 != next_360) {
 
       frame_motion++;
 
       if (frame_motion == 20) {
-        frame_motion = 0;
         current_360 = next_360;
       }
       //ctx.save()
       ctx.globalAlpha = frame_motion / 20.0;
       ctx.drawImage(images[next_360], 0, 0);
       //ctx.restore()
+    } else if (show_grid) {
+      if (frame_motion != 20) {
+        frame_motion++;
+      }
+    } else if (!show_grid) {
+      if (frame_motion != 20) {
+        frame_motion++;
+      }
     }
+
     textureEquirec.needsUpdate = true;
 
   }
