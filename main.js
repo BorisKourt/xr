@@ -99,8 +99,8 @@ function init() {
   textureEquirec = new THREE.CanvasTexture(canvas2);
 
   textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
-  //textureEquirec.magFilter = THREE.LinearFilter;
-  textureEquirec.minFilter = THREE.NearestFilter;
+  textureEquirec.magFilter = THREE.LinearFilter;
+  textureEquirec.minFilter = THREE.NearestMipmapLinearFilter;
   textureEquirec.needsUpdate = true;
 
   var equirectShader = THREE.ShaderLib[ "equirect" ];
@@ -204,7 +204,7 @@ function init() {
 
   var geometries = [
     new THREE.CylinderBufferGeometry( 0.4, 0.4, 0.005, 32 ),
-    new THREE.IcosahedronBufferGeometry( 0.4, 3 )
+    new THREE.SphereBufferGeometry( 0.4, 32, 32)
   ];
 
   for ( var i = 0; i < 32; i ++ ) {
