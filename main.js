@@ -100,7 +100,7 @@ function init() {
 
   textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
   textureEquirec.magFilter = THREE.LinearFilter;
-  textureEquirec.minFilter = THREE.NearestMipmapLinearFilter;
+  textureEquirec.minFilter = THREE.LinearMipmapNearestFilter;
   textureEquirec.needsUpdate = true;
 
   var equirectShader = THREE.ShaderLib[ "equirect" ];
