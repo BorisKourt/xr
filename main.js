@@ -19,6 +19,8 @@ var next_360 = 0;
 var show_grid = false;
 var frame_motion = 20;
 
+var og = new THREE.Vector3();
+
 const slideActions = new Map([
   [ 0, function() {
     next_360 = 2;
@@ -100,7 +102,7 @@ function init() {
 
   textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
   textureEquirec.magFilter = THREE.LinearFilter;
-  textureEquirec.minFilter = THREE.LinearMipmapNearestFilter;
+  textureEquirec.minFilter = THREE.NearestFilter;
   textureEquirec.needsUpdate = true;
 
   var equirectShader = THREE.ShaderLib[ "equirect" ];
@@ -203,7 +205,7 @@ function init() {
   }
 
   var geometries = [
-    new THREE.CylinderBufferGeometry( 0.4, 0.4, 0.005, 32 ),
+    new THREE.CylinderBufferGeometry( 0.4, 0.4, 0.005, 64 ),
     new THREE.SphereBufferGeometry( 0.4, 32, 32)
   ];
 
@@ -234,20 +236,44 @@ function init() {
     var object = new THREE.Mesh( geometry, material_group );
 
     if (i % 2 == 0) {
-      object.position.x = Math.random() * 10 - 5;
-      object.position.y = Math.random() * 10 - 5;
-      object.position.z = Math.random() * -5 - 0.5;
+      object.position.x = Math.random() * 20 + 5;
+      object.position.y = Math.random() * 20 + 5;
+      object.position.z = Math.random() * -20 - 0.5;
     } else {
-      object.position.x = Math.random() * 10 - 5;
-      object.position.y = Math.random() * 10 - 5;
-      object.position.z = Math.random() * 5 + 0.5;
+      object.position.x = Math.random() * -20 - 5;
+      object.position.y = Math.random() * -20 - 5;
+      object.position.z = Math.random() * 20 + 0.5;
     }
 
-    object.rotation.x = Math.random() * 2 * Math.PI;
-    object.rotation.y = Math.random() * 2 * Math.PI;
-    object.rotation.z = Math.random() * 2 * Math.PI;
+    if (0 === geo) {
+      if (i % 2 == 0) {
+        object.position.x = Math.random() * 20 + 5;
+        object.position.y = Math.random() * 20 + 5;
+        object.position.z = Math.random() * -20 - 0.5;
+      } else {
+        object.position.x = Math.random() * -20 - 5;
+        object.position.y = Math.random() * -20 - 5;
+        object.position.z = Math.random() * 20 + 0.5;
+      }
+      object.lookAt(og);
+      object.rotation.x = Math.PI / 2;
+      object.scale.setScalar( Math.random() * 10 + 5 );
+    } else {
+      if (i % 2 == 0) {
+        object.position.x = Math.random() * 10 + 5;
+        object.position.y = Math.random() * 10 + 5;
+        object.position.z = Math.random() * -6 - 0.5;
+      } else {
+        object.position.x = Math.random() * -10 - 5;
+        object.position.y = Math.random() * -10 - 5;
+        object.position.z = Math.random() * 6 + 0.5;
+      }
+      //object.rotation.x = Math.random() * 2 * Math.PI;
+      object.rotation.y = Math.random() * 2 * Math.PI;
+      //object.rotation.z = Math.random() * 2 * Math.PI;
+      object.scale.setScalar( Math.random() * 5 + 0.5 );
+    }
 
-    object.scale.setScalar( Math.random() + 0.5 );
     object.userData.id = 100 + geo;
 
     group.add( object );
