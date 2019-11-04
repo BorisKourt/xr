@@ -144,6 +144,7 @@ function init() {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 200 );
+  /*
 
   cubeCamera1 = new THREE.CubeCamera( 1, 1000, 256 );
   cubeCamera1.renderTarget.texture.generateMipmaps = true;
@@ -154,10 +155,10 @@ function init() {
   cubeCamera2.renderTarget.texture.generateMipmaps = true;
   cubeCamera2.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
   scene.add( cubeCamera2 );
-
   reflection_material = new THREE.MeshBasicMaterial( {
 					envMap: cubeCamera2.renderTarget.texture
   });
+  */
 
   scene.add(cubeMesh);
 
@@ -235,10 +236,10 @@ function init() {
       { roughness: 0.0,
         metalness: 0.9,
         //envmap: textureequirec
-        envMap: cubeCamera2.renderTarget.texture
+        envMap: equirectMaterial.map
       } );
 
-    var object = new THREE.Mesh( geometry, reflection_material);
+    var object = new THREE.Mesh( geometry, material_group);
 
     object.position.x = Math.random() * 40 - 20;
     object.position.z = Math.random() * 40 - 20;
@@ -488,6 +489,7 @@ function render() {
 
   }
 
+    /*
   for (var i = 0; i < group.children.length; i++) {
     if (group.children[i].userData.name == "reflector") {
       group.children[i].visible = false;
@@ -509,6 +511,7 @@ function render() {
       group.children[i].visible = true;
     }
   }
+  */
 
 
   renderer.render( scene, camera );
