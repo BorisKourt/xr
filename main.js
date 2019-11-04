@@ -11,8 +11,9 @@ var cubeCamera, cubeCameraB;
 var material;
 var count = 0;
 var images = [];
+var imageTextures = [];
 
-var current_360 = 0;
+var current_360 = -1;
 var next_360 = 0;
 
 var show_grid = false;
@@ -37,13 +38,24 @@ const slideActions = new Map([
   }]
 ]);
 
+var skyboxes = [
+  'images/0__D5AgPtPU4AACFMi_1572276799.jpg',
+  'images/balkestetindfog_1572276651.jpg',
+  'images/boygen2_1572276679.jpg',
+  'images/lars_hertervig_the_tarn_1572276611.jpg',
+  'images/odd_nerdrum_selvportrett_1572276574.jpg',
+  'images/vg1_1572276735.jpg'
+];
+
 var clock = new THREE.Clock(true);
 clock.getDelta();
 
 init();
 animate();
 
+
 function init() {
+  var textureLoader = new THREE.TextureLoader();
 
   canvas2 = document.createElement('canvas');
 
@@ -56,27 +68,14 @@ function init() {
 
     canvas2.style.position = "absolute";
 
-    //Loading of the home test image - img1
-    images.push(new Image());
-    images[0].src = 'images/0__D5AgPtPU4AACFMi_1572276799.jpg';
-    images.push(new Image());
-    images[1].src = 'images/balkestetindfog_1572276651.jpg';
-    images.push(new Image());
-    images[2].src = 'images/boygen2_1572276679.jpg';
-    images.push(new Image());
-    images[3].src = 'images/lars_hertervig_the_tarn_1572276611.jpg';
-    images.push(new Image());
-    images[4].src = 'images/odd_nerdrum_selvportrett_1572276574.jpg';
-    images.push(new Image());
-    images[5].src = 'images/vg1_1572276735.jpg';
-
-    images[0].onload = function () {
-      ctx.drawImage(images[0], 0, 0);
-    };
+    for (var i = 0; i < skyboxes.length; i++) {
+      images[i] = new Image() ;
+      images[i].src = skyboxes[i];
+      imageTextures[i] = textureLoader.load( skyboxes[i] );
+    }
 
   }
 
-  var textureLoader = new THREE.TextureLoader();
 
   document.body.appendChild( canvas2 );
 
@@ -212,12 +211,25 @@ function init() {
 
     var geo = Math.floor( Math.random() * geometries.length );
     var geometry = geometries[ geo ];
-    var material_group = new THREE.MeshStandardMaterial(
-      { roughness: 0.0,
-        metalness: 0.9,
-        //envMap: textureEquirec
-        envMap: equirectMaterial.map
-      } );
+    var material_group;
+    var orb = i % skyboxes.length;
+
+    if (0 === geo) {
+      material_group = new THREE.MeshStandardMaterial(
+        { roughness: 0.0,
+          metalness: 0.9,
+          //envmap: textureequirec
+          envMap: equirectMaterial.map
+        } );
+    } else {
+      material_group = new THREE.MeshBasicMaterial({
+        map: imageTextures[orb],
+        depthWrite: true,
+        color: 0xffffff,
+        transparent: true,
+        side: THREE.BackSide
+      });
+    }
 
     var object = new THREE.Mesh( geometry, material_group );
 
@@ -285,7 +297,11 @@ function onSelectStart( event ) {
     var object = intersection.object;
     object.matrix.premultiply( tempMatrix );
     object.matrix.decompose( object.position, object.quaternion, object.scale );
-    object.material.emissive.b = 1;
+    if (object.material.emissive) {
+      object.material.emissive.b = 1;
+    } else {
+      object.material.color.setHex(0xff0000);
+    }
     controller.add( object );
 
     controller.userData.selected = object;
@@ -303,8 +319,11 @@ function onSelectEnd( event ) {
     var object = controller.userData.selected;
     object.matrix.premultiply( controller.matrixWorld );
     object.matrix.decompose( object.position, object.quaternion, object.scale );
-    object.material.emissive.b = 0;
-
+    if (object.material.emissive) {
+      object.material.emissive.b = 0;
+    } else {
+      object.material.color.setHex(0xffffff);
+    }
     if (slideActions.has(object.userData.id)) {
       slideActions.get(object.userData.id)();
     }
@@ -343,7 +362,11 @@ function intersectObjects( controller ) {
     var intersection = intersections[ 0 ];
 
     var object = intersection.object;
-    object.material.emissive.r = 1;
+    if (object.material.emissive) {
+      object.material.emissive.r = 1;
+    } else {
+      object.material.color.setHex(0x0000ff);
+    }
     intersected.push( object );
 
     line.scale.z = intersection.distance;
@@ -361,7 +384,11 @@ function cleanIntersected() {
   while ( intersected.length ) {
 
     var object = intersected.pop();
-    object.material.emissive.r = 0;
+    if (object.material.emissive) {
+      object.material.emissive.r = 0;
+    } else {
+      object.material.color.setHex(0xffffff);
+    }
 
   }
 
@@ -388,9 +415,10 @@ function render() {
   intersectObjects( controller1 );
   intersectObjects( controller2 );
 
-  var time = performance.now() * 0.00001;
+  const time = performance.now() * 0.00001;
 
-  var elapsed = clock.getElapsedTime();
+  // 2D Canvas Loop for Texure Effects
+  const elapsed = clock.getElapsedTime();
   if (elapsed - previous_clock >= 1.0 / frame_rate) {
     previous_clock = elapsed;
 
@@ -401,10 +429,11 @@ function render() {
       if (frame_motion == 20) {
         current_360 = next_360;
       }
-      //ctx.save()
+
       ctx.globalAlpha = frame_motion / 20.0;
       ctx.drawImage(images[next_360], 0, 0);
-      //ctx.restore()
+      textureEquirec.needsUpdate = true;
+
     } else if (show_grid) {
       if (frame_motion != 20) {
         frame_motion++;
@@ -415,7 +444,6 @@ function render() {
       }
     }
 
-    textureEquirec.needsUpdate = true;
 
   }
 
