@@ -233,9 +233,9 @@ function init() {
     }
 
     object.lookAt(og);
-    object.rotation.z = Math.PI / 2;
-    object.rotation.x = Math.PI / 2;
-    object.rotation.y = Math.PI / 2;
+    object.rotation.z = Math.PI / 4;
+    object.rotation.x = Math.PI / 4;
+    object.rotation.y = Math.PI / 4;
     object.scale.setScalar( Math.random() * 6 + 3 );
 
     group.add( object );
