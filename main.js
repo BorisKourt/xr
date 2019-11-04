@@ -223,19 +223,18 @@ function init() {
 
     var object = new THREE.Mesh( geometry, material_group );
 
+    object.position.x = Math.random() * 40 - 20;
+    object.position.z = Math.random() * 40 - 20;
+
     if (i % 2 == 0) {
-      object.position.x = Math.random() * 40 - 20;
-      object.position.y = Math.random() * -20 - 6;
-      object.position.z = Math.random() * 40 - 20;
+      object.position.y = Math.random() * -20 - 4;
     } else {
-      object.position.x = Math.random() * 40 - 20;
-      object.position.y = Math.random() * 20 + 6;
-      object.position.z = Math.random() * 40 - 20;
+      object.position.y = Math.random() * 20 + 4;
     }
 
     object.lookAt(og);
-    object.rotation.x = Math.PI / 2;
-    object.scale.setScalar( Math.random() * 10 + 5 );
+    object.rotation.z = Math.PI / 2;
+    object.scale.setScalar( Math.random() * 6 + 3 );
 
     group.add( object );
 
@@ -256,19 +255,18 @@ function init() {
 
     var object = new THREE.Mesh( geometry, material_group );
 
+    object.position.x = Math.random() * 8 - 4;
+    object.position.z = Math.random() * 8 - 4;
+
     if (i % 2 == 0) {
-      object.position.x = Math.random() * 12 - 6;
-      object.position.y = Math.random() * -10 - 3;
-      object.position.z = Math.random() * 12 - 6;
+      object.position.y = Math.random() * -10 - 1;
     } else {
-      object.position.x = Math.random() * 12 - 6;
-      object.position.y = Math.random() * 10 + 3;
-      object.position.z = Math.random() * 12 - 6;
+      object.position.y = Math.random() * 10 + 1;
     }
     //object.rotation.x = Math.random() * 2 * Math.PI;
     object.rotation.y = Math.random() * 2 * Math.PI;
     //object.rotation.z = Math.random() * 2 * Math.PI;
-    object.scale.setScalar( Math.random() * 2 + 0.5 );
+    object.scale.setScalar( Math.random() * 4 + 1 );
 
     object.userData.id = 100 + i;
 
