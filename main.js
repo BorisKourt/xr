@@ -211,70 +211,66 @@ function init() {
 
   for ( var i = 0; i < 32; i ++ ) {
 
-    var geo = Math.floor( Math.random() * geometries.length );
-    var geometry = geometries[ geo ];
+    var geometry = geometries[ 0 ];
     var material_group;
-    var orb = i % skyboxes.length;
 
-    if (0 === geo) {
-      material_group = new THREE.MeshStandardMaterial(
-        { roughness: 0.0,
-          metalness: 0.9,
-          //envmap: textureequirec
-          envMap: equirectMaterial.map
-        } );
-    } else {
-      material_group = new THREE.MeshBasicMaterial({
-        map: imageTextures[orb],
-        depthWrite: true,
-        color: 0xffffff,
-        transparent: true,
-        side: THREE.BackSide
-      });
-    }
+    material_group = new THREE.MeshStandardMaterial(
+      { roughness: 0.0,
+        metalness: 0.9,
+        //envmap: textureequirec
+        envMap: equirectMaterial.map
+      } );
 
     var object = new THREE.Mesh( geometry, material_group );
 
     if (i % 2 == 0) {
-      object.position.x = Math.random() * 20 + 5;
-      object.position.y = Math.random() * 20 + 5;
-      object.position.z = Math.random() * -20 - 0.5;
+      object.position.x = Math.random() * 40 - 20;
+      object.position.y = Math.random() * -20 - 6;
+      object.position.z = Math.random() * 40 - 20;
     } else {
-      object.position.x = Math.random() * -20 - 5;
-      object.position.y = Math.random() * -20 - 5;
-      object.position.z = Math.random() * 20 + 0.5;
+      object.position.x = Math.random() * 40 - 20;
+      object.position.y = Math.random() * 20 + 6;
+      object.position.z = Math.random() * 40 - 20;
     }
 
-    if (0 === geo) {
-      if (i % 2 == 0) {
-        object.position.x = Math.random() * 20 + 5;
-        object.position.y = Math.random() * 20 + 5;
-        object.position.z = Math.random() * -20 - 0.5;
-      } else {
-        object.position.x = Math.random() * -20 - 5;
-        object.position.y = Math.random() * -20 - 5;
-        object.position.z = Math.random() * 20 + 0.5;
-      }
-      object.lookAt(og);
-      object.rotation.x = Math.PI / 2;
-      object.scale.setScalar( Math.random() * 10 + 5 );
-    } else {
-      if (i % 2 == 0) {
-        object.position.x = Math.random() * 10 + 5;
-        object.position.y = Math.random() * 10 + 5;
-        object.position.z = Math.random() * -6 - 0.5;
-      } else {
-        object.position.x = Math.random() * -10 - 5;
-        object.position.y = Math.random() * -10 - 5;
-        object.position.z = Math.random() * 6 + 0.5;
-      }
-      //object.rotation.x = Math.random() * 2 * Math.PI;
-      object.rotation.y = Math.random() * 2 * Math.PI;
-      //object.rotation.z = Math.random() * 2 * Math.PI;
-      object.scale.setScalar( Math.random() * 5 + 0.5 );
-    }
+    object.lookAt(og);
+    object.rotation.x = Math.PI / 2;
+    object.scale.setScalar( Math.random() * 10 + 5 );
 
-    object.userData.id = 100 + geo;
+    group.add( object );
+
+  }
+
+  for ( var i = 0; i < skyboxes.length; i ++ ) {
+
+    var geometry = geometries[ 1 ];
+    var material_group;
+
+    material_group = new THREE.MeshBasicMaterial({
+      map: imageTextures[i],
+      depthWrite: true,
+      color: 0xffffff,
+      transparent: true,
+      side: THREE.BackSide
+    });
+
+    var object = new THREE.Mesh( geometry, material_group );
+
+    if (i % 2 == 0) {
+      object.position.x = Math.random() * 12 - 6;
+      object.position.y = Math.random() * -10 - 3;
+      object.position.z = Math.random() * 12 - 6;
+    } else {
+      object.position.x = Math.random() * 12 - 6;
+      object.position.y = Math.random() * 10 + 3;
+      object.position.z = Math.random() * 12 - 6;
+    }
+    //object.rotation.x = Math.random() * 2 * Math.PI;
+    object.rotation.y = Math.random() * 2 * Math.PI;
+    //object.rotation.z = Math.random() * 2 * Math.PI;
+    object.scale.setScalar( Math.random() * 2 + 0.5 );
+
+    object.userData.id = 100 + i;
 
     group.add( object );
 
