@@ -13,6 +13,9 @@ var count = 0;
 var images = [];
 var imageTextures = [];
 
+var count = 0, cubeCamera1, cubeCamera2;
+var reflection_material;
+
 var current_360 = 0;
 var next_360 = 0;
 
@@ -142,6 +145,20 @@ function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 200 );
 
+  cubeCamera1 = new THREE.CubeCamera( 1, 1000, 256 );
+  cubeCamera1.renderTarget.texture.generateMipmaps = true;
+  cubeCamera1.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
+  scene.add( cubeCamera1 );
+
+  cubeCamera2 = new THREE.CubeCamera( 1, 1000, 256 );
+  cubeCamera2.renderTarget.texture.generateMipmaps = true;
+  cubeCamera2.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
+  scene.add( cubeCamera2 );
+
+  reflection_material = new THREE.MeshBasicMaterial( {
+					envMap: cubeCamera2.renderTarget.texture
+  });
+
   scene.add(cubeMesh);
 
   slides = new THREE.Group();
@@ -218,10 +235,10 @@ function init() {
       { roughness: 0.0,
         metalness: 0.9,
         //envmap: textureequirec
-        envMap: equirectMaterial.map
+        envMap: cubeCamera2.renderTarget.texture
       } );
 
-    var object = new THREE.Mesh( geometry, material_group );
+    var object = new THREE.Mesh( geometry, reflection_material);
 
     object.position.x = Math.random() * 40 - 20;
     object.position.z = Math.random() * 40 - 20;
@@ -237,6 +254,7 @@ function init() {
     object.rotation.x = Math.PI / 4;
     object.rotation.y = Math.PI / 4;
     object.scale.setScalar( Math.random() * 6 + 3 );
+    object.userData.name = "reflector";
 
     group.add( object );
 
@@ -469,6 +487,29 @@ function render() {
 
 
   }
+
+  for (var i = 0; i < group.children.length; i++) {
+    if (group.children[i].userData.name == "reflector") {
+      group.children[i].visible = false;
+    }
+  }
+
+  if ( count % 2 === 0 ) {
+    reflection_material.envMap = cubeCamera1.renderTarget.texture;
+    cubeCamera2.update( renderer, scene );
+  } else {
+    reflection_material.envMap = cubeCamera2.renderTarget.texture;
+    cubeCamera1.update( renderer, scene );
+  }
+
+  count ++;
+
+  for (var i = 0; i < group.children.length; i++) {
+    if (group.children[i].userData.name == "reflector") {
+      group.children[i].visible = true;
+    }
+  }
+
 
   renderer.render( scene, camera );
 
