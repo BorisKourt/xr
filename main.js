@@ -13,7 +13,7 @@ var count = 0;
 var images = [];
 var imageTextures = [];
 
-var current_360 = -1;
+var current_360 = 0;
 var next_360 = 0;
 
 var show_grid = false;
@@ -209,7 +209,7 @@ function init() {
     new THREE.SphereBufferGeometry( 0.4, 32, 32)
   ];
 
-  for ( var i = 0; i < 32; i ++ ) {
+  for ( var i = 0; i < 16; i ++ ) {
 
     var geometry = geometries[ 0 ];
     var material_group;
@@ -242,13 +242,14 @@ function init() {
 
   }
 
-  for ( var i = 0; i < skyboxes.length; i ++ ) {
+  for ( var i = 0; i < skyboxes.length * 2; i ++ ) {
 
+    var n = i % skyboxes.length;
     var geometry = geometries[ 1 ];
     var material_group;
 
     material_group = new THREE.MeshBasicMaterial({
-      map: imageTextures[i],
+      map: imageTextures[n],
       depthWrite: true,
       color: 0xffffff,
       transparent: true,
@@ -270,7 +271,7 @@ function init() {
     //object.rotation.z = Math.random() * 2 * Math.PI;
     object.scale.setScalar( Math.random() * 4 + 1 );
 
-    object.userData.id = 100 + i;
+    object.userData.id = 100 + n;
 
     group.add( object );
 
