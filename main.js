@@ -20,7 +20,7 @@ var frame_motion = 20;
 
 const slideActions = new Map([
   [ 0, function() {
-    next_360 = 3;
+    next_360 = 2;
     frame_motion = 0;
   }],
   [ 1, function() {
@@ -28,6 +28,10 @@ const slideActions = new Map([
     frame_motion = 0;
   }],
   [ 2, function() {
+    next_360 = 4;
+    frame_motion = 0;
+  }],
+  [ 3, function() {
     show_grid = !show_grid;
     frame_motion = 0;
   }]
@@ -142,31 +146,13 @@ function init() {
   slides = new THREE.Group();
   scene.add( slides );
 
-  const test_slide = textureLoader.load( "slides/slide2.png" );
+  //const test_slide = textureLoader.load( "slides/slide2.png" );
 
   var slideImages = [
+    textureLoader.load( "slides/slide0.png" ),
     textureLoader.load( "slides/slide1.png" ),
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide,
-    test_slide
+    textureLoader.load( "slides/slide2.png" ),
+    textureLoader.load( "slides/slide3.png" )
   ];
 
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
