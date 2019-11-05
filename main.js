@@ -16,7 +16,7 @@ var imageTextures = [];
 var count = 0, cubeCamera1, cubeCamera2;
 var reflection_material;
 
-var current_360 = 0;
+var current_360 = -1;
 var next_360 = 0;
 
 var show_grid = false;
@@ -26,30 +26,70 @@ var og = new THREE.Vector3();
 
 const slideActions = new Map([
   [ 0, function() {
-    next_360 = 2;
+    next_360 = 0;
     frame_motion = 0;
   }],
   [ 1, function() {
-    next_360 = 3;
+    next_360 = 1;
     frame_motion = 0;
   }],
   [ 2, function() {
+    next_360 = 2;
+    frame_motion = 0;
+  }],
+  [ 4, function() {
+    next_360 = 3;
+    frame_motion = 0;
+  }],
+  [ 5, function() {
+    next_360 = 2;
+    frame_motion = 0;
+  }],
+  [ 6, function() {
     next_360 = 4;
     frame_motion = 0;
   }],
-  [ 3, function() {
-    show_grid = !show_grid;
+  [ 7, function() {
+    next_360 = 5;
+    frame_motion = 0;
+  }],
+  [ 8, function() {
+    next_360 = 6;
+    frame_motion = 0;
+  }],
+  [ 9, function() {
+    next_360 = 7;
+    frame_motion = 0;
+  }],
+  [ 10, function() {
+    next_360 = 4;
+    frame_motion = 0;
+  }],
+  [ 11, function() {
+    next_360 = 8;
+    frame_motion = 0;
+  }],
+  [ 12, function() {
+    next_360 = 1;
+    frame_motion = 0;
+  }],
+  [ 13, function() {
+    next_360 = 9;
     frame_motion = 0;
   }]
 ]);
 
 var skyboxes = [
-  'images/0__D5AgPtPU4AACFMi_1572276799.jpg',
-  'images/balkestetindfog_1572276651.jpg',
-  'images/boygen2_1572276679.jpg',
-  'images/lars_hertervig_the_tarn_1572276611.jpg',
-  'images/odd_nerdrum_selvportrett_1572276574.jpg',
-  'images/vg1_1572276735.jpg'
+  'images/winter_night_in_the_mountains_1572887777.jpg',
+  'images/arne_ekeland_kulltippen_1572884209.jpg',
+  'images/arne_ekeland_bygningsarbeidere_1572884477.jpg',
+  'images/arne_ekeland_fergemann_1572884455.jpg',
+  'images/arne_ekeland_jernbanestasjon_1572884230.jpg',
+  'images/arne_ekeland_henrettelse_1572884282.jpg',
+  'images/arne_ekeland_kvinne_ved_sjoen_1572884058.jpg',
+  'images/frans_widerberg_1572887473.jpg',
+  'images/vinter_i_kragero_1572887254.jpg',
+  'images/strandlandskap_med_traer_og_bater_1572887282.jpg'
 ];
 
 var clock = new THREE.Clock(true);
@@ -76,7 +116,7 @@ function init() {
     for (var i = 0; i < skyboxes.length; i++) {
       images[i] = new Image() ;
       images[i].src = skyboxes[i];
-      imageTextures[i] = textureLoader.load( skyboxes[i] );
+      //imageTextures[i] = textureLoader.load( skyboxes[i] );
     }
 
   }
@@ -168,10 +208,20 @@ function init() {
   //const test_slide = textureLoader.load( "slides/slide2.png" );
 
   var slideImages = [
-    textureLoader.load( "slides/slide0.png" ),
-    textureLoader.load( "slides/slide1.png" ),
-    textureLoader.load( "slides/slide2.png" ),
-    textureLoader.load( "slides/slide3.png" )
+    textureLoader.load( "slides/slide0-fs8.png" ),
+    textureLoader.load( "slides/slide1-fs8.png" ),
+    textureLoader.load( "slides/slide2-fs8.png" ),
+    textureLoader.load( "slides/slide3-fs8.png" ),
+    textureLoader.load( "slides/slide4-fs8.png" ),
+    textureLoader.load( "slides/slide5-fs8.png" ),
+    textureLoader.load( "slides/slide6-fs8.png" ),
+    textureLoader.load( "slides/slide7-fs8.png" ),
+    textureLoader.load( "slides/slide8-fs8.png" ),
+    textureLoader.load( "slides/slide9-fs8.png" ),
+    textureLoader.load( "slides/slide10-fs8.png" ),
+    textureLoader.load( "slides/slide11-fs8.png" ),
+    textureLoader.load( "slides/slide12-fs8.png" ),
+    textureLoader.load( "slides/slide13-fs8.png" )
   ];
 
   const plane_geo = new THREE.PlaneGeometry( 4, 2 );
@@ -212,12 +262,6 @@ function init() {
     dragger.position.y = 1;
     dragger.position.z = -3 + -(0.07 * i);
 
-    /*
-    dragger.rotation.x = Math.random() * 2 * Math.PI;
-    dragger.rotation.y = Math.random() * 2 * Math.PI;
-    */
-
-
     group.add(dragger);
 
   }
@@ -254,19 +298,20 @@ function init() {
     object.rotation.z = Math.PI / 4;
     object.rotation.x = Math.PI / 4;
     object.rotation.y = Math.PI / 4;
-    object.scale.setScalar( Math.random() * 6 + 3 );
+    object.scale.setScalar( Math.random() * 7 + 1 );
     object.userData.name = "reflector";
 
     group.add( object );
 
   }
 
-  for ( var i = 0; i < skyboxes.length * 2; i ++ ) {
+  for ( var i = 0; i < skyboxes.length; i ++ ) {
 
     var n = i % skyboxes.length;
     var geometry = geometries[ 1 ];
     var material_group;
 
+    /*
     material_group = new THREE.MeshBasicMaterial({
       map: imageTextures[n],
       depthWrite: true,
@@ -274,6 +319,14 @@ function init() {
       transparent: true,
       side: THREE.BackSide
     });
+    */
+
+    material_group = new THREE.MeshStandardMaterial(
+      { roughness: 0.0,
+        metalness: 0.9,
+        //envmap: textureequirec
+        envMap: equirectMaterial.map
+      } );
 
     var object = new THREE.Mesh( geometry, material_group );
 
@@ -288,7 +341,7 @@ function init() {
     //object.rotation.x = Math.random() * 2 * Math.PI;
     object.rotation.y = Math.random() * 2 * Math.PI;
     //object.rotation.z = Math.random() * 2 * Math.PI;
-    object.scale.setScalar( Math.random() * 4 + 1 );
+    object.scale.setScalar( Math.random() * 3 + 1 );
 
     object.userData.id = 100 + n;
 
@@ -339,11 +392,13 @@ function onSelectStart( event ) {
     var object = intersection.object;
     object.matrix.premultiply( tempMatrix );
     object.matrix.decompose( object.position, object.quaternion, object.scale );
+
     if (object.material.emissive) {
       object.material.emissive.b = 1;
     } else {
       object.material.color.setHex(0xff0000);
     }
+
     controller.add( object );
 
     controller.userData.selected = object;
