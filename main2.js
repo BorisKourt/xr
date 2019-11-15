@@ -45,11 +45,11 @@ function onLoad()
 
   // Put in two cameras
   cameraLeft = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
-  cameraLeft.position.set(0,0,3);
+  cameraLeft.position.set(separation,0,3);
   scene.add(cameraLeft);
 
   cameraRight = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
-  cameraRight.position.set(0,0,3);
+  cameraRight.position.set(-separation,0,3);
   scene.add(cameraRight);
 
   iluminateSomething();
@@ -94,10 +94,10 @@ function run()
 function drawSomething(){
 
 
-  for ( var i = 0; i < skyboxes.length; i ++ ) {
+  for ( var i = 0; i < skyboxes.length / 2; i ++ ) {
 
     var n = i % skyboxes.length;
-    var geometry = new THREE.SphereBufferGeometry( 0.15, 64, 64)
+    var geometry = new THREE.SphereBufferGeometry( 0.05 * i + 0.1, 64, 64)
 
     var material_group = new THREE.MeshBasicMaterial({
       map: imageTextures[n],
@@ -109,9 +109,9 @@ function drawSomething(){
 
     var object = new THREE.Mesh( geometry, material_group );
 
-    var s = Math.PI * (0.5 - Math.random()) * 2;
-    var t = Math.PI * (0.5 - Math.random()) * 2;
-    var r = 1;
+    var s = Math.PI * (0.5 - Math.random()) * 3;
+    var t = Math.PI * (0.5 - Math.random()) * 3;
+    var r = 0.9;
 
     object.position.x = r * Math.cos(s) * Math.sin(t);
     object.position.y = r * Math.sin(s) * Math.sin(t);
@@ -134,7 +134,7 @@ var rotator = 0;
 function animateSomething(){
   var theta = objects.clock.getElapsedTime() / 10000;
   rotator++;
-  var loc = rotator / 100000000;
+  var loc = rotator / 1000000;
   var x = cameraLeft.position.x;
   var z = cameraLeft.position.z;
   cameraLeft.position.x = x * Math.cos(loc) + z * Math.sin(loc);
