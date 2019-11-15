@@ -93,11 +93,11 @@ function run()
 
 function drawSomething(){
 
-
-  for ( var i = 0; i < skyboxes.length / 2; i ++ ) {
+  var planetOrbitGroup = new THREE.Object3D();
+  for ( var i = 0; i < 5; i ++ ) {
 
     var n = i % skyboxes.length;
-    var geometry = new THREE.SphereBufferGeometry( 0.05 * i + 0.1, 64, 64)
+    var geometry = new THREE.SphereBufferGeometry( 0.025 * i + 0.2, 64, 64)
 
     var material_group = new THREE.MeshBasicMaterial({
       map: imageTextures[n],
@@ -117,24 +117,23 @@ function drawSomething(){
     object.position.y = r * Math.sin(s) * Math.sin(t);
     object.position.z = r * Math.cos(t);
 
-    scene.add( object );
+    planetOrbitGroup.add( object );
   }
 
-  var planetOrbitGroup = new THREE.Object3D();
-  var sunGroup = new THREE.Object3D();
 
   objects.clock = new THREE.Clock();
 
-  sunGroup.position.x = -1;
-  planetOrbitGroup.add(sunGroup);
-  objects.sunGroup = sunGroup;
+  scene.add(planetOrbitGroup);
+  objects.planetOrbitGroup = planetOrbitGroup;
 
 }
+
 var rotator = 0;
 function animateSomething(){
+  /*
   var theta = objects.clock.getElapsedTime() / 10000;
   rotator++;
-  var loc = rotator / 1000000;
+  var loc = rotator / 10000000;
   var x = cameraLeft.position.x;
   var z = cameraLeft.position.z;
   cameraLeft.position.x = x * Math.cos(loc) + z * Math.sin(loc);
@@ -146,6 +145,8 @@ function animateSomething(){
   cameraRight.position.x = x * Math.cos(loc) + z * Math.sin(loc);
   cameraRight.position.z = z * Math.cos(loc) - x * Math.sin(loc);
   cameraRight.lookAt(0,0,0);
+  */
+  objects.planetOrbitGroup.rotation.y += 0.01;
 
 }
 
