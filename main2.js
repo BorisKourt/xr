@@ -31,7 +31,7 @@ function onLoad()
   // Grab our containers div
   var container = document.getElementById("container");
   var canvas = document.createElement( 'canvas' );
-  var context = canvas.getContext( 'webgl2', { alpha: false, antialias: false } );
+  var context = canvas.getContext( 'webgl2', { alpha: false, antialias: true } );
   renderer = new THREE.WebGLRenderer( { canvas: canvas, context: context } );
 
   // Create the Three.js renderers, add them to our divs
