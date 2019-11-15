@@ -130,20 +130,21 @@ function drawSomething(){
   objects.sunGroup = sunGroup;
 
 }
-
+var rotator = 0;
 function animateSomething(){
-  var theta = objects.clock.getElapsedTime() / 1000;
-
+  var theta = objects.clock.getElapsedTime() / 10000;
+  rotator++;
+  var loc = rotator / 100000000;
   var x = cameraLeft.position.x;
   var z = cameraLeft.position.z;
-  cameraLeft.position.x = x * Math.cos(theta) + z * Math.sin(theta);
-  cameraLeft.position.z = z * Math.cos(theta) - x * Math.sin(theta);
+  cameraLeft.position.x = x * Math.cos(loc) + z * Math.sin(loc);
+  cameraLeft.position.z = z * Math.cos(loc) - x * Math.sin(loc);
   cameraLeft.lookAt(0,0,0);
 
   x = cameraRight.position.x;
   z = cameraRight.position.z;
-  cameraRight.position.x = x * Math.cos(theta) + z * Math.sin(theta);
-  cameraRight.position.z = z * Math.cos(theta) - x * Math.sin(theta);
+  cameraRight.position.x = x * Math.cos(loc) + z * Math.sin(loc);
+  cameraRight.position.z = z * Math.cos(loc) - x * Math.sin(loc);
   cameraRight.lookAt(0,0,0);
 
 }
