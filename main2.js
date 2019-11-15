@@ -45,11 +45,11 @@ function onLoad()
 
   // Put in two cameras
   cameraLeft = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
-  cameraLeft.position.set(separation,0,3);
+  cameraLeft.position.set(0,0,3);
   scene.add(cameraLeft);
 
   cameraRight = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
-  cameraRight.position.set(-separation,0,3);
+  cameraRight.position.set(0,0,3);
   scene.add(cameraRight);
 
   iluminateSomething();
@@ -72,7 +72,7 @@ function run()
 
   cameraLeft.aspect = width * 2 / height;
   cameraLeft.updateProjectionMatrix();
-  //cameraLeft.position.set( separation, 0, 3 );
+  cameraLeft.position.set( separation, 0, 3 );
 
   renderer.render( scene, cameraLeft );
 
@@ -82,7 +82,7 @@ function run()
 
   cameraRight.aspect = width * 2 / height;
   cameraRight.updateProjectionMatrix();
-  //cameraRight.position.set( -separation, 0, 3 );
+  cameraRight.position.set( -separation, 0, 3 );
 
   renderer.render( scene, cameraRight );
   animateSomething();
