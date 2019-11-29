@@ -139,7 +139,7 @@ function run()
 function drawSomething(){
 
   var planetOrbitGroup = new THREE.Object3D();
-  for ( var i = 0; i < 2; i ++ ) {
+  for ( var i = 0; i < 0; i ++ ) {
 
     var n = i % skyboxes.length;
     var geometry = new THREE.SphereBufferGeometry( 0.025 * i + 0.3, 64, 64)
@@ -165,14 +165,21 @@ function drawSomething(){
     planetOrbitGroup.add( object );
   }
 
-  var geometry = new THREE.TorusKnotGeometry( 0.6, 0.1, 256, 256);
+  var geometry = new THREE.TorusKnotGeometry( 0.6, 0.1, 512, 128);
   var material = new THREE.MeshStandardMaterial( {
-    map: imageTextures[2],
-    specularMap: imageTextures[2],
-    normalMap: imageTextures[2],
-    color: 0xdddddd,
-    specular: 0x222222,
-    shininess: 35,
+    map: imageTextures[7],
+    normalMap: imageTextures[6],
+    displacementMap: imageTextures[5],
+    emissiveMap: imageTextures[4],
+    displacementScale: 0.04,
+    aoMap: imageTextures[3],
+    color: 0xffffff,
+    emissive: 0x222222,
+    envMap: imageTextures[2],
+    lightMap: imageTextures[1],
+    roughnessMap: imageTextures[0],
+    lightMapIntensity: 0.5,
+    metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
   var torusKnot = new THREE.Mesh( geometry, material );
@@ -210,8 +217,11 @@ function animateSomething(){
 
 function iluminateSomething(){
   var light = new THREE.PointLight( 0xffffff, 2, 100);
-  light.position.set(-10, 0, 20);
+  light.position.set(1, 10, -20);
   scene.add(light);
+  light2 = new THREE.PointLight( 0xffffff, 2, 100);
+  light2.position.set(10, -20, 0);
+  scene.add(light2);
 }
 
 function addKeyHandler()
