@@ -61,8 +61,12 @@ function onLoad()
   run();
 }
 
+var framecounter = 0;
+
 function run()
 {
+  framecounter++;
+  /*
   var width = Math.round(container.offsetWidth/2),
     height = container.offsetHeight;
   // Render the scene
@@ -85,10 +89,25 @@ function run()
   cameraRight.position.set( -separation, 0, 3 );
 
   renderer.render( scene, cameraRight );
+  */
+
+  if (framecounter % 2 == 0) {
+    cameraRight.position.set( -separation, 0, 3 );
+    renderer.render( scene, cameraRight );
+  } else {
+    cameraLeft.position.set( separation, 0, 3 );
+    renderer.render( scene, cameraLeft );
+  }
+
   animateSomething();
 
   // Ask for another frame
-  requestAnimationFrame(run);
+  //requestAnimationFrame(run);
+  setTimeout( function() {
+
+    requestAnimationFrame( run );
+
+  }, 1000 / 60 );
 }
 
 function drawSomething(){
