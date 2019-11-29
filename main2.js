@@ -107,7 +107,7 @@ function run()
 
     requestAnimationFrame( run );
 
-  }, 1000 / 30 );
+  }, 1000 / 120 );
 }
 
 function drawSomething(){
