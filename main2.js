@@ -185,19 +185,19 @@ function drawSomething(){
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
   var material2 = new THREE.MeshPhysicalMaterial( {
-    map: imageTextures[0],
-    normalMap: imageTextures[7],
-    displacementMap: imageTextures[2],
-    emissiveMap: imageTextures[6],
+    map: imageTextures[7],
+    normalMap: imageTextures[9],
+    displacementMap: imageTextures[8],
+    emissiveMap: imageTextures[2],
     emissiveIntensity: 2.1,
     displacementScale: 0.04,
-    aoMap: imageTextures[4],
+    aoMap: imageTextures[3],
     color: 0xffffff,
     emissive: 0x222222,
-    envMap: imageTextures[3],
+    envMap: imageTextures[4],
     envMapIntensity: 2.0,
     lightMap: imageTextures[1],
-    roughnessMap: imageTextures[8],
+    roughnessMap: imageTextures[1],
     lightMapIntensity: 0.5,
     metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
