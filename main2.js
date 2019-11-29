@@ -37,7 +37,7 @@ function onLoad()
   // Create the Three.js renderers, add them to our divs
   //renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setClearColor(new THREE.Color().setRGB(0,0,0));
-  renderer.setSize(container.offsetWidth, container.offsetHeight);
+  renderer.setSize(1920, 1080 + 45 + 1080);
   container.appendChild( renderer.domElement );
 
   // Create a new Three.js scene
@@ -72,7 +72,7 @@ function run()
   // Render the scene
   renderer.setViewport( 0, 0, width, height);
   renderer.setScissor( 0, 0, width, height);
-  renderer.enableScissorTest ( true );
+  renderer.setScissorTest ( true );
 
   cameraLeft.aspect = width * 2 / height;
   cameraLeft.updateProjectionMatrix();
@@ -82,7 +82,7 @@ function run()
 
   renderer.setViewport( width, 0, width, height);
   renderer.setScissor( width, 0, width, height);
-  renderer.enableScissorTest ( true );
+  renderer.setScissorTest ( true );
 
   cameraRight.aspect = width * 2 / height;
   cameraRight.updateProjectionMatrix();
@@ -90,6 +90,7 @@ function run()
 
   renderer.render( scene, cameraRight );
   */
+  /*
 
   if (framecounter % 2 == 0) {
     cameraRight.position.set( -separation, 0, 3 );
@@ -99,18 +100,38 @@ function run()
     renderer.render( scene, cameraLeft );
   }
 
-  animateSomething();
   setTimeout(run, 0);
+  */
+  var width = Math.round(container.offsetWidth/2),
+    height = container.offsetHeight;
+  // Render the scene
+  renderer.setViewport( 0, 0, 1920, 1080);
+  renderer.setScissor( 0, 0, 1920, 1080);
+  renderer.setScissorTest ( true );
 
-  /*
-    requestAnimationFrame( run );
-  // Ask for another frame
-  //requestAnimationFrame(run);
+  cameraLeft.aspect = 1920 / 1080;
+  cameraLeft.updateProjectionMatrix();
+  cameraLeft.position.set( separation, 0, 3.1 );
+
+  renderer.render( scene, cameraLeft );
+
+  renderer.setViewport( 0, 1080 + 45, 1920, 1080);
+  renderer.setScissor( 0, 1080 + 45, 1920, 1080);
+  renderer.setScissorTest ( true );
+
+  cameraRight.aspect = 1920 / 1080;
+  cameraRight.updateProjectionMatrix();
+  cameraRight.position.set( -separation, 0, 3.1 );
+
+  renderer.render( scene, cameraRight );
+
+  animateSomething();
+
   setTimeout( function() {
 
+  requestAnimationFrame( run );
 
-  },  );
-  */
+  },  1000 / 75);
 }
 
 function drawSomething(){
