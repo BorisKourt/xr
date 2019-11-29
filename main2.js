@@ -199,7 +199,7 @@ function drawSomething(){
     metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
-  var torusKnot = new THREE.Mesh( geometry, material );
+  var torusKnot = new THREE.Mesh( geometry, material2 );
   torusKnot.receiveShadow = true;
   torusKnot.castShadow = true;
   planetOrbitGroup.add( torusKnot );
@@ -210,7 +210,7 @@ function drawSomething(){
   torusKnot2.castShadow = true;
   planetOrbitGroup.add( torusKnot2 );
 
-  var torusKnot3 = new THREE.Mesh( geometry, material );
+  var torusKnot3 = new THREE.Mesh( geometry, material2 );
   torusKnot3.rotation.y = -2.1;
   torusKnot3.receiveShadow = true;
   torusKnot3.castShadow = true;
@@ -251,17 +251,18 @@ function animateSomething(){
 
 function iluminateSomething(){
   var light = new THREE.PointLight( 0xaaaaaa, 2, 100);
-  light.position.set(0, 30, -30);
-  scene.add(light);
+  light.position.set(0, 4, -4);
   light.castShadow = true;
+  scene.add(light);
+
   light2 = new THREE.PointLight( 0xaaaaaa, 2, 100);
   //light2.position.set(0, 30, 0);
-  light2.castShadow = true;
-  scene.add(light2);
+  //light2.castShadow = true;
+  //scene.add(light2);
   light3 = new THREE.PointLight( 0xaaaaaa, 2, 100);
-  light3.position.set(-3, 3, -10);
+  //light3.position.set(-3, 3, -10);
   //light3.castShadow = true;
-  scene.add(light3);
+  //scene.add(light3);
 }
 
 function addKeyHandler()
