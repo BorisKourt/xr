@@ -245,6 +245,8 @@ function animateSomething(){
   objects.planetOrbitGroup.children[0].rotation.x += 0.0001;
   objects.planetOrbitGroup.children[1].rotation.y += 0.0007;
   objects.planetOrbitGroup.children[2].rotation.z += 0.0003;
+  scene.children[2].lookAt(0,0,0);
+  scene.children[2].rotation.z += 0.01;
   objects.planetOrbitGroup.rotation.y += 0.0005;
 
 }
