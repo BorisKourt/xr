@@ -40,6 +40,7 @@ function onLoad()
   renderer.setClearColor(new THREE.Color().setRGB(0,0,0));
   renderer.setSize(container.offsetWidth, container.offsetHeight);
   renderer.shadowMap.enabled = true;
+  renderer.physicallyCorrectLights = true
   container.appendChild( renderer.domElement );
 
   // Create a new Three.js scene
@@ -261,6 +262,7 @@ function iluminateSomething(){
   spotLight.shadow.camera.near = 0.01;
   spotLight.shadow.camera.far = 1000;
   spotLight.shadow.camera.fov = 30;
+  scene.add(spotLight);
 }
 
 function addKeyHandler()
