@@ -39,6 +39,7 @@ function onLoad()
   //renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setClearColor(new THREE.Color().setRGB(0,0,0));
   renderer.setSize(container.offsetWidth, container.offsetHeight);
+  renderer.shadowMap.enabled = true;
   container.appendChild( renderer.domElement );
 
   // Create a new Three.js scene
@@ -183,14 +184,20 @@ function drawSomething(){
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
   var torusKnot = new THREE.Mesh( geometry, material );
+  torusKnot.receiveShadow = true;
+  torusKnot.castShadow = true;
   planetOrbitGroup.add( torusKnot );
 
   var torusKnot2 = new THREE.Mesh( geometry, material );
   torusKnot2.rotation.x = 2.1;
+  torusKnot2.receiveShadow = true;
+  torusKnot2.castShadow = true;
   planetOrbitGroup.add( torusKnot2 );
 
   var torusKnot3 = new THREE.Mesh( geometry, material );
   torusKnot3.rotation.y = -2.1;
+  torusKnot3.receiveShadow = true;
+  torusKnot3.castShadow = true;
   planetOrbitGroup.add( torusKnot3);
 
 
@@ -227,11 +234,14 @@ function iluminateSomething(){
   var light = new THREE.PointLight( 0xaaaaaa, 2, 100);
   light.position.set(0, 30, -30);
   scene.add(light);
+  light.castShadow = true;
   light2 = new THREE.PointLight( 0xaaaaaa, 2, 100);
   //light2.position.set(0, 30, 0);
+  light2.castShadow = true;
   scene.add(light2);
   light3 = new THREE.PointLight( 0xaaaaaa, 2, 100);
   light3.position.set(-3, 3, -10);
+  light3.castShadow = true;
   scene.add(light3);
 }
 
