@@ -165,7 +165,7 @@ function drawSomething(){
     planetOrbitGroup.add( object );
   }
 
-  var geometry = new THREE.TorusKnotGeometry( 0.6, 0.1, 512, 128);
+  var geometry = new THREE.TorusKnotGeometry( 0.55, 0.1, 512, 128);
   var material = new THREE.MeshStandardMaterial( {
     map: imageTextures[7],
     normalMap: imageTextures[6],
@@ -222,6 +222,9 @@ function iluminateSomething(){
   light2 = new THREE.PointLight( 0xffffff, 2, 100);
   light2.position.set(10, -20, 0);
   scene.add(light2);
+  light3 = new THREE.PointLight( 0xffffff, 2, 100);
+  light3.position.set(-10, 0, 20);
+  scene.add(light3);
 }
 
 function addKeyHandler()
