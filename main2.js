@@ -167,23 +167,31 @@ function drawSomething(){
 
   var geometry = new THREE.TorusKnotGeometry( 0.55, 0.1, 512, 128);
   var material = new THREE.MeshStandardMaterial( {
-    map: imageTextures[7],
-    normalMap: imageTextures[6],
-    displacementMap: imageTextures[5],
-    emissiveMap: imageTextures[4],
+    map: imageTextures[2],
+    normalMap: imageTextures[1],
+    displacementMap: imageTextures[2],
+    emissiveMap: imageTextures[3],
     displacementScale: 0.04,
-    aoMap: imageTextures[3],
+    aoMap: imageTextures[4],
     color: 0xffffff,
     emissive: 0x222222,
-    envMap: imageTextures[2],
-    lightMap: imageTextures[1],
-    roughnessMap: imageTextures[0],
+    envMap: imageTextures[5],
+    lightMap: imageTextures[6],
+    roughnessMap: imageTextures[7],
     lightMapIntensity: 0.5,
     metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
   var torusKnot = new THREE.Mesh( geometry, material );
   planetOrbitGroup.add( torusKnot );
+
+  var torusKnot2 = new THREE.Mesh( geometry, material );
+  torusKnot2.rotation.x = 2.1;
+  planetOrbitGroup.add( torusKnot2 );
+
+  var torusKnot3 = new THREE.Mesh( geometry, material );
+  torusKnot3.rotation.y = -2.1;
+  planetOrbitGroup.add( torusKnot3);
 
 
   objects.clock = new THREE.Clock();
@@ -216,14 +224,14 @@ function animateSomething(){
 }
 
 function iluminateSomething(){
-  var light = new THREE.PointLight( 0xffffff, 2, 100);
-  light.position.set(1, 10, -20);
+  var light = new THREE.PointLight( 0xaaaaaa, 2, 100);
+  light.position.set(0, 30, -30);
   scene.add(light);
-  light2 = new THREE.PointLight( 0xffffff, 2, 100);
-  light2.position.set(10, -20, 0);
+  light2 = new THREE.PointLight( 0xaaaaaa, 2, 100);
+  //light2.position.set(0, 30, 0);
   scene.add(light2);
-  light3 = new THREE.PointLight( 0xffffff, 2, 100);
-  light3.position.set(-10, 0, 20);
+  light3 = new THREE.PointLight( 0xaaaaaa, 2, 100);
+  light3.position.set(-3, 3, -10);
   scene.add(light3);
 }
 
