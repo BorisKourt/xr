@@ -100,7 +100,7 @@ function run()
   }
 
   animateSomething();
-  run();
+  setTimeout(run, 0);
 
   /*
     requestAnimationFrame( run );
