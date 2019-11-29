@@ -170,7 +170,7 @@ function drawSomething(){
   var material = new THREE.MeshPhysicalMaterial( {
     map: imageTextures[2],
     normalMap: imageTextures[1],
-    displacementMap: imageTextures[2],
+    displacementMap: imageTextures[0],
     emissiveMap: imageTextures[3],
     displacementScale: 0.04,
     aoMap: imageTextures[4],
