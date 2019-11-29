@@ -147,7 +147,7 @@ function drawSomething(){
       map: imageTextures[n],
       depthWrite: true,
       color: 0xffffff,
-      transparent: true
+      transparent: true,
       side: THREE.BackSide
     });
 
