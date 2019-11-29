@@ -192,7 +192,7 @@ function drawSomething(){
     displacementScale: 0.04,
     aoMap: imageTextures[4],
     color: 0xffffff,
-    emissive: 0x222222,
+    emissive: 0x777777,
     envMap: imageTextures[3],
     lightMap: imageTextures[1],
     roughnessMap: imageTextures[8],
@@ -200,7 +200,7 @@ function drawSomething(){
     metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
-  var torusKnot = new THREE.Mesh( geometry, material2 );
+  var torusKnot = new THREE.Mesh( geometry, material );
   torusKnot.receiveShadow = true;
   torusKnot.castShadow = true;
   planetOrbitGroup.add( torusKnot );
@@ -211,7 +211,7 @@ function drawSomething(){
   torusKnot2.castShadow = true;
   planetOrbitGroup.add( torusKnot2 );
 
-  var torusKnot3 = new THREE.Mesh( geometry, material2 );
+  var torusKnot3 = new THREE.Mesh( geometry, material );
   torusKnot3.rotation.y = -2.1;
   torusKnot3.receiveShadow = true;
   torusKnot3.castShadow = true;
