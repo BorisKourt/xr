@@ -155,7 +155,7 @@ function drawSomething(){
 
     var s = Math.PI * (0.5 - Math.random()) * 2.5;
     var t = Math.PI * (0.5 - Math.random()) * 2.5;
-    var r = 0.9;
+    var r = 1;
 
     object.position.x = r * Math.cos(s) * Math.sin(t);
     object.position.y = r * Math.sin(s) * Math.sin(t);
@@ -164,7 +164,7 @@ function drawSomething(){
     planetOrbitGroup.add( object );
   }
 
-  var geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
+  var geometry = new THREE.TorusKnotGeometry( 1, 0.1, 100, 64);
   var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   var torusKnot = new THREE.Mesh( geometry, material );
   planetOrbitGroup.add( torusKnot );
