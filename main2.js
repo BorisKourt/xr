@@ -100,14 +100,17 @@ function run()
   }
 
   animateSomething();
+  run();
 
+  /*
     requestAnimationFrame( run );
   // Ask for another frame
   //requestAnimationFrame(run);
   setTimeout( function() {
 
 
-  }, 1000 / 120 );
+  },  );
+  */
 }
 
 function drawSomething(){
