@@ -252,7 +252,7 @@ function animateSomething(){
 
 function iluminateSomething(){
   var spotLight = new THREE.SpotLight( 0xffffff );
-  spotLight.position.set( 15, 15, 0.5);
+  spotLight.position.set( 3, 3, 0.5);
 
   spotLight.castShadow = true;
 
@@ -260,9 +260,19 @@ function iluminateSomething(){
   spotLight.shadow.mapSize.height = 1024;
 
   spotLight.shadow.camera.near = 0.01;
-  spotLight.shadow.camera.far = 400;
+  spotLight.shadow.camera.far = 600;
   spotLight.shadow.camera.fov = 30;
   scene.add(spotLight);
+
+  var spotLight2 = new THREE.SpotLight( 0xffffff );
+  spotLight2.position.set( 10, 3, 0.5);
+  spotLight2.castShadow = false;
+  scene.add(spotLight2);
+
+  var spotLight3 = new THREE.SpotLight( 0xffffff );
+  spotLight3.position.set( -0.1, 0.1, 20);
+  spotLight3.castShadow = false;
+  scene.add(spotLight3);
 }
 
 function addKeyHandler()
