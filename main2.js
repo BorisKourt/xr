@@ -101,11 +101,11 @@ function run()
 
   animateSomething();
 
+    requestAnimationFrame( run );
   // Ask for another frame
   //requestAnimationFrame(run);
   setTimeout( function() {
 
-    requestAnimationFrame( run );
 
   }, 1000 / 120 );
 }
