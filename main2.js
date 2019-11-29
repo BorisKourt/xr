@@ -103,8 +103,8 @@ function drawSomething(){
       map: imageTextures[n],
       depthWrite: true,
       color: 0xffffff,
-      transparent: true,
-      side: THREE.BackSide
+      transparent: true
+      //side: THREE.BackSide
     });
 
     var object = new THREE.Mesh( geometry, material_group );
