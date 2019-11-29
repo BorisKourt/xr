@@ -148,7 +148,7 @@ function drawSomething(){
       depthWrite: true,
       color: 0xffffff,
       transparent: true
-      //side: THREE.BackSide
+      side: THREE.BackSide
     });
 
     var object = new THREE.Mesh( geometry, material_group );
