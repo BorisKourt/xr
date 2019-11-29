@@ -164,7 +164,7 @@ function drawSomething(){
     planetOrbitGroup.add( object );
   }
 
-  var geometry = new THREE.TorusKnotGeometry( 1, 0.1, 100, 64);
+  var geometry = new THREE.TorusKnotGeometry( 0.6, 0.1, 256, 256);
   var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   var torusKnot = new THREE.Mesh( geometry, material );
   planetOrbitGroup.add( torusKnot );
