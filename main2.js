@@ -37,7 +37,7 @@ function onLoad()
   // Create the Three.js renderers, add them to our divs
   //renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setClearColor(new THREE.Color().setRGB(0,0,0));
-  renderer.setSize(1920, 1080 + 45 + 1080);
+  renderer.setSize(1920, 1080);
   container.appendChild( renderer.domElement );
 
   // Create a new Three.js scene
@@ -65,8 +65,8 @@ var framecounter = 0;
 
 function run()
 {
-  framecounter++;
-  /*
+  //framecounter++;
+
   var width = Math.round(container.offsetWidth/2),
     height = container.offsetHeight;
   // Render the scene
@@ -89,7 +89,7 @@ function run()
   cameraRight.position.set( -separation, 0, 3 );
 
   renderer.render( scene, cameraRight );
-  */
+
   /*
 
   if (framecounter % 2 == 0) {
@@ -102,6 +102,7 @@ function run()
 
   setTimeout(run, 0);
   */
+  /*
   var width = Math.round(container.offsetWidth/2),
     height = container.offsetHeight;
   // Render the scene
@@ -124,14 +125,14 @@ function run()
   cameraRight.position.set( -separation, 0, 3.1 );
 
   renderer.render( scene, cameraRight );
-
+  */
   animateSomething();
 
-  setTimeout( function() {
+  //setTimeout( function() {
 
   requestAnimationFrame( run );
 
-  },  1000 / 75);
+  //},  1000 / 60);
 }
 
 function drawSomething(){
