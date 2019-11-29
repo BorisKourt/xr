@@ -37,18 +37,18 @@ function onLoad()
   // Create the Three.js renderers, add them to our divs
   //renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setClearColor(new THREE.Color().setRGB(0,0,0));
-  renderer.setSize(1920, 1080);
+  renderer.setSize(container.offsetWidth, container.offsetHeight);
   container.appendChild( renderer.domElement );
 
   // Create a new Three.js scene
   scene = new THREE.Scene();
 
   // Put in two cameras
-  cameraLeft = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
+  cameraLeft = new THREE.PerspectiveCamera( 42, (container.offsetWidth / 2) / container.offsetHeight, 0.1, 4000 );
   cameraLeft.position.set(0,0,1);
   scene.add(cameraLeft);
 
-  cameraRight = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
+  cameraRight = new THREE.PerspectiveCamera( 42, (container.offsetWidth / 2) / container.offsetHeight, 0.1, 4000 );
   cameraRight.position.set(0,0,1);
   scene.add(cameraRight);
 
@@ -76,7 +76,7 @@ function run()
 
   cameraLeft.aspect = width * 2 / height;
   cameraLeft.updateProjectionMatrix();
-  cameraLeft.position.set( separation, 0, 3 );
+  cameraLeft.position.set( separation, 0, 2.8 );
 
   renderer.render( scene, cameraLeft );
 
@@ -86,7 +86,7 @@ function run()
 
   cameraRight.aspect = width * 2 / height;
   cameraRight.updateProjectionMatrix();
-  cameraRight.position.set( -separation, 0, 3 );
+  cameraRight.position.set( -separation, 0, 2.8 );
 
   renderer.render( scene, cameraRight );
 
@@ -138,10 +138,10 @@ function run()
 function drawSomething(){
 
   var planetOrbitGroup = new THREE.Object3D();
-  for ( var i = 0; i < 5; i ++ ) {
+  for ( var i = 0; i < 2; i ++ ) {
 
     var n = i % skyboxes.length;
-    var geometry = new THREE.SphereBufferGeometry( 0.025 * i + 0.2, 64, 64)
+    var geometry = new THREE.SphereBufferGeometry( 0.025 * i + 0.3, 64, 64)
 
     var material_group = new THREE.MeshBasicMaterial({
       map: imageTextures[n],
@@ -153,8 +153,8 @@ function drawSomething(){
 
     var object = new THREE.Mesh( geometry, material_group );
 
-    var s = Math.PI * (0.5 - Math.random()) * 3;
-    var t = Math.PI * (0.5 - Math.random()) * 3;
+    var s = Math.PI * (0.5 - Math.random()) * 2.5;
+    var t = Math.PI * (0.5 - Math.random()) * 2.5;
     var r = 0.9;
 
     object.position.x = r * Math.cos(s) * Math.sin(t);
