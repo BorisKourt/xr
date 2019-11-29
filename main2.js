@@ -245,26 +245,22 @@ function animateSomething(){
   objects.planetOrbitGroup.children[0].rotation.x += 0.0001;
   objects.planetOrbitGroup.children[1].rotation.y += 0.0007;
   objects.planetOrbitGroup.children[2].rotation.z += 0.0003;
-  scene.children[2].lookAt(0,0,0);
-  scene.children[2].rotation.z += 0.01;
   objects.planetOrbitGroup.rotation.y += 0.0005;
 
 }
 
 function iluminateSomething(){
-  var light = new THREE.PointLight( 0xaaaaaa, 2, 100);
-  light.position.set(0, 4, -4);
-  light.castShadow = true;
-  scene.add(light);
+  var spotLight = new THREE.SpotLight( 0xffffff );
+  spotLight.position.set( 10, 10, 10);
 
-  light2 = new THREE.PointLight( 0xaaaaaa, 2, 100);
-  //light2.position.set(0, 30, 0);
-  //light2.castShadow = true;
-  //scene.add(light2);
-  light3 = new THREE.PointLight( 0xaaaaaa, 2, 100);
-  //light3.position.set(-3, 3, -10);
-  //light3.castShadow = true;
-  //scene.add(light3);
+  spotLight.castShadow = true;
+
+  spotLight.shadow.mapSize.width = 1024;
+  spotLight.shadow.mapSize.height = 1024;
+
+  spotLight.shadow.camera.near = 0.01;
+  spotLight.shadow.camera.far = 1000;
+  spotLight.shadow.camera.fov = 30;
 }
 
 function addKeyHandler()
