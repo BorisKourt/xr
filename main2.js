@@ -166,7 +166,15 @@ function drawSomething(){
   }
 
   var geometry = new THREE.TorusKnotGeometry( 0.6, 0.1, 256, 256);
-  var material = new THREE.MeshStandardMaterial( { color: 0xffff00 } );
+  var material = new THREE.MeshPhongMaterial( {
+    map: imageTextures[0],
+    specularMap: imageTextures[0],
+    normalMap: imageTextures[0],
+    color: 0xdddddd,
+    specular: 0x222222,
+    shininess: 35,
+    normalScale: new THREE.Vector2( 0.8, 0.8 )
+  });
   var torusKnot = new THREE.Mesh( geometry, material );
   planetOrbitGroup.add( torusKnot );
 
