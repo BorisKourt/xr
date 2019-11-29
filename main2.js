@@ -4,7 +4,8 @@ var renderer = null,
   cameraRight = null,
   objects = {},
   zincrement = 0.01,
-  separation = -0.04300000000000005,
+  //separation = -0.04300000000000005,
+  separation = 0.04200000000000005,
   incrementation = 0.001,
   animating = false;
 
