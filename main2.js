@@ -167,7 +167,7 @@ function drawSomething(){
   }
 
   var geometry = new THREE.TorusKnotGeometry( 0.55, 0.1, 512, 128);
-  var material = new THREE.MeshStandardMaterial( {
+  var material = new THREE.MeshPhysicalMaterial( {
     map: imageTextures[2],
     normalMap: imageTextures[1],
     displacementMap: imageTextures[2],
@@ -241,7 +241,7 @@ function iluminateSomething(){
   scene.add(light2);
   light3 = new THREE.PointLight( 0xaaaaaa, 2, 100);
   light3.position.set(-3, 3, -10);
-  light3.castShadow = true;
+  //light3.castShadow = true;
   scene.add(light3);
 }
 
