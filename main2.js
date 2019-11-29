@@ -167,9 +167,9 @@ function drawSomething(){
 
   var geometry = new THREE.TorusKnotGeometry( 0.6, 0.1, 256, 256);
   var material = new THREE.MeshPhongMaterial( {
-    map: imageTextures[0],
-    specularMap: imageTextures[0],
-    normalMap: imageTextures[0],
+    map: imageTextures[2],
+    specularMap: imageTextures[2],
+    normalMap: imageTextures[2],
     color: 0xdddddd,
     specular: 0x222222,
     shininess: 35,
