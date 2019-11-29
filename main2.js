@@ -226,7 +226,10 @@ function animateSomething(){
   cameraRight.position.z = z * Math.cos(loc) - x * Math.sin(loc);
   cameraRight.lookAt(0,0,0);
   */
-  objects.planetOrbitGroup.rotation.y += 0.01;
+  objects.planetOrbitGroup.children[0].x += 0.001;
+  objects.planetOrbitGroup.children[1].y += 0.007;
+  objects.planetOrbitGroup.children[2].z += 0.003;
+  objects.planetOrbitGroup.rotation.y += 0.002;
 
 }
 
