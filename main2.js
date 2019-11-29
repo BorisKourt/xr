@@ -186,16 +186,16 @@ function drawSomething(){
   });
   var material2 = new THREE.MeshPhysicalMaterial( {
     map: imageTextures[0],
-    normalMap: imageTextures[0],
-    displacementMap: imageTextures[0],
-    emissiveMap: imageTextures[0],
+    normalMap: imageTextures[7],
+    displacementMap: imageTextures[2],
+    emissiveMap: imageTextures[6],
     displacementScale: 0.04,
-    aoMap: imageTextures[0],
+    aoMap: imageTextures[4],
     color: 0xffffff,
     emissive: 0x222222,
-    envMap: imageTextures[0],
-    lightMap: imageTextures[0],
-    roughnessMap: imageTextures[0],
+    envMap: imageTextures[3],
+    lightMap: imageTextures[1],
+    roughnessMap: imageTextures[8],
     lightMapIntensity: 0.5,
     metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
