@@ -202,7 +202,7 @@ function drawSomething(){
     metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
-  var torusKnot = new THREE.Mesh( geometry, material );
+  var torusKnot = new THREE.Mesh( geometry, material2 );
   torusKnot.receiveShadow = true;
   torusKnot.castShadow = true;
   planetOrbitGroup.add( torusKnot );
@@ -213,7 +213,7 @@ function drawSomething(){
   torusKnot2.castShadow = true;
   planetOrbitGroup.add( torusKnot2 );
 
-  var torusKnot3 = new THREE.Mesh( geometry, material );
+  var torusKnot3 = new THREE.Mesh( geometry, material2 );
   torusKnot3.rotation.y = -2.1;
   torusKnot3.receiveShadow = true;
   torusKnot3.castShadow = true;
@@ -253,7 +253,7 @@ function animateSomething(){
 }
 
 function iluminateSomething(){
-  var spotLight = new THREE.SpotLight( 0xffffff );
+  var spotLight = new THREE.SpotLight( 0xffffff, 2.0 );
   spotLight.position.set( 3, 3, 0.5);
 
   spotLight.castShadow = true;
@@ -266,12 +266,12 @@ function iluminateSomething(){
   spotLight.shadow.camera.fov = 30;
   scene.add(spotLight);
 
-  var spotLight2 = new THREE.SpotLight( 0xffffff );
+  var spotLight2 = new THREE.SpotLight( 0xffffff, 3.0 );
   spotLight2.position.set( 10, 3, 0.5);
   spotLight2.castShadow = false;
   scene.add(spotLight2);
 
-  var spotLight3 = new THREE.SpotLight( 0xffffff );
+  var spotLight3 = new THREE.SpotLight( 0xffffff, 4.0 );
   spotLight3.position.set( -0.1, 0.1, 20);
   spotLight3.castShadow = false;
   scene.add(spotLight3);
