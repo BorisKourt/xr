@@ -47,11 +47,11 @@ function onLoad()
   scene = new THREE.Scene();
 
   // Put in two cameras
-  cameraLeft = new THREE.PerspectiveCamera( 42, (container.offsetWidth / 2) / container.offsetHeight, 0.1, 4000 );
+  cameraLeft = new THREE.PerspectiveCamera( 42, (container.offsetWidth / 2) / container.offsetHeight, 0.1, 400 );
   cameraLeft.position.set(0,0,1);
   scene.add(cameraLeft);
 
-  cameraRight = new THREE.PerspectiveCamera( 42, (container.offsetWidth / 2) / container.offsetHeight, 0.1, 4000 );
+  cameraRight = new THREE.PerspectiveCamera( 42, (container.offsetWidth / 2) / container.offsetHeight, 0.1, 400);
   cameraRight.position.set(0,0,1);
   scene.add(cameraRight);
 
@@ -252,7 +252,7 @@ function animateSomething(){
 
 function iluminateSomething(){
   var spotLight = new THREE.SpotLight( 0xffffff );
-  spotLight.position.set( 10, 10, 10);
+  spotLight.position.set( 15, 15, 0.5);
 
   spotLight.castShadow = true;
 
@@ -260,7 +260,7 @@ function iluminateSomething(){
   spotLight.shadow.mapSize.height = 1024;
 
   spotLight.shadow.camera.near = 0.01;
-  spotLight.shadow.camera.far = 1000;
+  spotLight.shadow.camera.far = 400;
   spotLight.shadow.camera.fov = 30;
   scene.add(spotLight);
 }
