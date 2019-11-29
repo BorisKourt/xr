@@ -183,12 +183,28 @@ function drawSomething(){
     metalness: 0.9,
     normalScale: new THREE.Vector2( 0.8, 0.8 )
   });
+  var material2 = new THREE.MeshPhysicalMaterial( {
+    map: imageTextures[7],
+    normalMap: imageTextures[2],
+    displacementMap: imageTextures[3],
+    emissiveMap: imageTextures[4],
+    displacementScale: 0.04,
+    aoMap: imageTextures[5],
+    color: 0xffffff,
+    emissive: 0x222222,
+    envMap: imageTextures[6],
+    lightMap: imageTextures[7],
+    roughnessMap: imageTextures[8],
+    lightMapIntensity: 0.5,
+    metalness: 0.9,
+    normalScale: new THREE.Vector2( 0.8, 0.8 )
+  });
   var torusKnot = new THREE.Mesh( geometry, material );
   torusKnot.receiveShadow = true;
   torusKnot.castShadow = true;
   planetOrbitGroup.add( torusKnot );
 
-  var torusKnot2 = new THREE.Mesh( geometry, material );
+  var torusKnot2 = new THREE.Mesh( geometry, material2 );
   torusKnot2.rotation.x = 2.1;
   torusKnot2.receiveShadow = true;
   torusKnot2.castShadow = true;
