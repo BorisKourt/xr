@@ -116,7 +116,7 @@ function run()
   renderer.render( scene, cameraLeft );
 
   renderer.setViewport( 0, 1080 + 45, 1920, 1080);
-  renderer.setScissor( 0, 1080 + 45, 1920, 1080);
+  renderer.setScissor( 0, 1080, 1920, 1080);
   renderer.setScissorTest ( true );
 
   cameraRight.aspect = 1920 / 1080;
