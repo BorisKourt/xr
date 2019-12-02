@@ -40,7 +40,7 @@ function onLoad()
   renderer.setClearColor(new THREE.Color().setRGB(0,0,0));
   renderer.setSize(container.offsetWidth, container.offsetHeight);
   renderer.shadowMap.enabled = true;
-  renderer.physicallyCorrectLights = true
+  //renderer.physicallyCorrectLights = true
   container.appendChild( renderer.domElement );
 
   // Create a new Three.js scene
